@@ -17,50 +17,51 @@ Included with the repository in the wireframes directory.
 
 ### Pseudocode
 1. Define required constants:
-  - boardConfig: Set to the number of pits on the board
+    - boardConfig: Set to the number of pits on the board.
 2. Define variables used to track state:
-  - homePitStones: Set to stones in home pits
-  - boardStones: Set to stones in other board pits
-  - turn: Set to the player whose turn it currently is
-  - turnCount: Set to the number of turns that have been completed
-  - selectedPit: Set to the pit that started the current turn so that it is tainted
-  - playerNames: Set to the custom names selected by players at the beginning, otherwise set to `Player 1`/`Player 2`
-  - winner: Set to the winner of the game
+    - homePitStones: Set to stones in home pits.
+    - boardStones: Set to stones in other board pits.
+    - turn: Set to the player whose turn it currently is.
+    - turnCount: Set to the number of turns that have been completed.
+    - selectedPit: Set to the pit that started the current turn so that it is tainted.
+    - playerNames: Set to the custom names selected by players at the beginning, otherwise set to `Player 1`/`Player 2`.
+    - winner: Set to the winner of the game.
 3. Cache DOM elements:
-  - infoPane: Information panel at the top of the game board
-  - playerPane: Information panel at the bottom of the game board
-  - {player1,player2}Pane: Game play information for each player
-  - playTurnBtn: Play Turn button
-  - playAgainBtn: Play Again link
-  - newGameBtn: Start a New Game button
+    - infoPane: Information panel at the top of the game board.
+    - playerPane: Information panel at the bottom of the game board.
+    - {player1,player2}Pane: Game play information for each player.
+    - playTurnBtn: Play Turn button.
+    - playAgainBtn: Play Again link.
+    - newGameBtn: Start a New Game button.
 4. Classes:
-  - GameScene: Contains the properties for each player on the scene
+    - GameScene: Contains the properties for each player on the scene.
 
 #### Functions
 5. On loading the application:
-  - init(): Render game preferences and start new game
-    - renderBoard(): Add board elements to the DOM with the boardConfig object
-      - resetBoard(): Set game preferences
-        - homePitStones object properties are set to zero
-        - boardStones object properties are set to zero
-        - Information panel requests player names and difficulty level
-    - renderScores(): Information panel is populated with player details
+    - init(): Render game preferences and start new game.
+      - renderBoard(): Add board elements to the DOM with the boardConfig object.
+        - resetBoard(): Set game preferences.
+          - homePitStones object properties are set to zero.
+          - boardStones object properties are set to zero.
+          - Information panel requests player names and difficulty level.
+      - renderScores(): Information panel is populated with player details.
 6. On selecting a pit:
-  - pitSelect(): Handle player selecting a pit
-    - Dataset for the element is updated
-    - Information panel is updated with the stones in that pit
+    - pitSelect(): Handle player selecting a pit.
+      - Dataset for the element is updated.
+      - Information panel is updated with the stones in that pit.
 6. Handle player playing a turn:
-  - playTurn():
-    - The selected pit is set to zero, and turn object is set with stones to distribute
-    - The selected pit is 'tainted' so that stones cannot be added to it for that turn
-    - The stones are distributed on each pit until zero
-  - checkState():
-    - If the last pit is a home pit, current player plays again
-    - If the last pit is empty and on the current player's side, all the opponent's stones on the opposite pit are added to the current player's home pit
-    - If all the pits on any of the game board sides are empty, stones are collected and added to the respective player's home pit and the gameOver() function is called
-  - gameOver():
-    - If all the pits on both sides are empty, the winner variable is set to the owner of the home pit with the highest number of stones
-    - Player panes are updated with the final information, and the Play Again button is rendered.
+    - playTurn():
+      - The selected pit is set to zero, and turn object is set with stones to distribute.
+      - The selected pit is 'tainted' so that stones cannot be added to it for that turn.
+      - The stones are distributed on each pit until zero.
+        - After board pit 6 or 12, a stone is dropped in the current player's home pit before distributing to the rest of the board pits.
+    - checkState():
+      - If the last pit is a home pit, current player plays again.
+      - If the last pit is empty and on the current player's side, all the opponent's stones on the opposite pit are added to the current player's home pit.
+      - If all the pits on any of the game board sides are empty, stones are collected and added to the respective player's home pit and the gameOver() function is called.
+    - gameOver():
+      - If all the pits on both sides are empty, the winner variable is set to the owner of the home pit with the highest number of stones.
+      - Player panes are updated with the final information, and the Play Again button is rendered.
 
 
 #### Game play description
