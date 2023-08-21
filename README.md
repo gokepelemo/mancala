@@ -33,9 +33,9 @@ Included with the repository in the wireframes directory.
   - playTurnBtn: Play Turn button
   - playAgainBtn: Play Again link
   - newGameBtn: Start a New Game button
-#### Classes
 4. Classes:
   - GameScene: Contains the properties for each player on the scene
+
 #### Functions
 5. On loading the application:
   - init(): Render game preferences and start new game
