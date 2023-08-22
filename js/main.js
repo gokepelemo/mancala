@@ -13,7 +13,7 @@ let homePitStones,
   selectedPit,
   winner,
   gamePlay,
-  // add validation to prevent numbers outside the range of 3 and 10
+  // todo: add validation to prevent numbers outside the range of 3 and 10
   difficulty = 3;
 
 /****** cached DOM elements ******/
@@ -38,7 +38,7 @@ class GameScene {
     // opposing side. if not, we return the player who owns the position
     this.boardPosition = function (position, opposingSide) {
       let player =
-        position > this.player1.homePitPosition
+        position < this.player1.homePitPosition
           ? this.player1.name
           : this.player2.name;
       return opposingSide ? this.player2.homePitPosition - position : player;
