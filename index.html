@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mancala - A Browser-Based Implementation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
       integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
@@ -29,144 +35,10 @@
     <main class="game">
       <div></div>
       <div id="game-board" class="board">
-        <div id="home-pit-2" class="home-pits">0</div>
-        <div id="board-pits-2" class="board-pits">
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-        </div>
-        <div id="board-pits-1" class="board-pits">
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-          <div class="board-pit">
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-            <div class="stone"></div>
-          </div>
-        </div>
-        <div id="home-pit-1" class="home-pits">0</div>
+        <div id="home-pit-2" class="home-pits" id="14">0</div>
+        <div id="board-pits-2" class="board-pits"></div>
+        <div id="board-pits-1" class="board-pits"></div>
+        <div id="home-pit-1" class="home-pits" id="7">0</div>
       </div>
       <div></div>
       <div></div>
@@ -177,16 +49,16 @@
       <div></div>
       <div></div>
       <div id="player-pane" class="players">
-        <div class="player-info">
-            <h3 class="player-name">Player 1</h3>
-            <p>Pit 6 Selected</p>
-            <p>Stones: 6</p>
-            <button>Play Turn</button>
+        <div id="player-1-pane" class="player-info">
+          <h3 class="player-name">Player 1</h3>
+          <p class="pit-info">Pit 6 Selected</p>
+          <p>Stones: <span class="stone-count">6</span></p>
+          <button>Play Turn</button>
         </div>
-        <div class="player-info">
-            <h3 class="player-name">Player 2</h3>
-            <p>Home Pit</p>
-            <p>Stones: 0</p>
+        <div id="player-2-pane" class="player-info">
+          <h3 class="player-name">Player 2</h3>
+          <p class="pit-info">Home Pit</p>
+          <p>Stones: <span class="stone-count">0</span></p>
         </div>
       </div>
     </main>
