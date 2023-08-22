@@ -1,6 +1,7 @@
 :root {
   --pit-border: 0.25vmin solid grey;
   --board-border: 0.75vmin solid grey;
+  --selected-pit: 0.75vmin solid red;
 }
 * {
   font-family: "JetBrains Mono", Arial, sans-serif;
@@ -120,12 +121,12 @@ button {
 }
 
 .stone {
-  width: 2vmin;
-  height: 2vmin;
+  width: 1.5vmin;
+  height: 1.5vmin;
   border-radius: 50%;
   display: flex;
   background-color: black;
-  border: 1px solid white;
+  border: 0.5px solid white;
 }
 
 .player-info > p {
