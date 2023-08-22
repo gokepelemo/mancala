@@ -60,11 +60,11 @@ const setPlayerParams = () => {
 
 // on initialization, prevent stones from being added to the home pits.
 // on every other turn prevent stones from being added to the home pit
-// of the current player and the pit they selected for the turn.
+// of the opposite player and the pit that they selected for the turn.
 const pitTainted = (position, init) => {
-  let oppositeTurn = turn === "player1" ? "player2" : "player1";
+  let oppositePlayer = turn === "player1" ? "player2" : "player1";
   if (init && (position === 7 || position === 14)) return true;
-  if (position === gamePlay[oppositeTurn].homePitPosition) return true;
+  if (position === gamePlay[oppositePlayer].homePitPosition) return true;
   return selectedPit ? position === selectedPit : false;
 };
 // add stones to the proper pits on game initialization
@@ -81,7 +81,8 @@ const initialPitStones = () => {
 
 // play a turn
 const playTurn = (position) => {
-  // collect stones from a selected pit and distribute to all pits except the tainted pits, return the id of the last pit it drops on
+  // collect stones from a selected pit and distribute to all pits except the tainted
+  // pits, return the id of the last pit we drop on
   let dropPosition,
     stones = boardStones.collect(position);
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
@@ -107,10 +108,11 @@ const playTurn = (position) => {
 
 const checkState = (position) => {
   let turnState = position - 1;
-  // If the last pit is a home pit, current player plays again.
+  // if the last pit is a home pit, the current player plays again.
   if (turnState === 7 || turnState === 14) {
     extraTurn = true;
-  // If the last pit is empty and on the current player's side, all the opponent's stones on the opposite pit are added to the current player's home pit.
+  // if the last pit is empty and on the current player's side, all the opponent's stones 
+  // on the opposite pit are added to the current player's home pit.
   } else if (boardStones[turnState] === 1) {
     let capturedStones = boardStones.collect(
       gamePlay.boardPosition(turnState, true)
