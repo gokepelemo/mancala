@@ -139,3 +139,7 @@ button {
 .stone-count {
     display: inline-block;
 }
+
+.home-pits > div {
+    display: none;
+}

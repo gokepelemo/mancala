@@ -8,9 +8,9 @@ const boardConfig = {
 /****** state variables ******/
 let homePitStones,
   boardStones,
-  turn,
+  turn = "player1",
   turnCount,
-  selectedPit,
+  selectedPit = 1,
   winner,
   gamePlay,
   difficulty = 6;
@@ -46,15 +46,29 @@ class GameScene {
 }
 
 /****** functions ******/
+const pitTainted = (...args) => {
+  if (args == 7 && turn == "player1") {
+    return true;
+  } else if (args == 14 && turn == "player2") {
+    return true;
+  }
+  args.forEach((item) => {
+    console.log(gamePlay[turn].homePitPosition);
+    return item == selectedPit || item == gamePlay[turn].homePitPosition
+      ? true
+      : false;
+  });
+};
 // add stone to the proper pits on game initialization
 const addPitStones = () => {
   for (let i = 1; i <= 14; i++) {
-    // update this after testing - should skip position for current player
-    if ((i == gamePlay.player1.homePitPosition || i == gamePlay.player2.homePitPosition)) continue;
+    // taint pit for the current player
+    if (pitTainted(i)) continue;
     // difficulty should be set in dialogue at the beginning of the game
     for (let j = 0; j < difficulty; j++) {
       let position = i.toString();
-      addStones(1, document.getElementById(position));
+      console.log(i)
+      addStones(1, document.getElementById(i.toString()));
     }
   }
 };
