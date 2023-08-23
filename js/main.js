@@ -49,9 +49,7 @@ class GameScene {
     // opposing side. if not, we return the player who owns the position
     this.boardPosition = function (position, opposingSide) {
       let player =
-        position <= this.player1.homePitPosition
-          ? `player1`
-          : `player2`;
+        position <= this.player1.homePitPosition ? `player1` : `player2`;
       return opposingSide ? this.player2.homePitPosition - position : player;
     };
   }
@@ -162,7 +160,7 @@ const checkState = (position) => {
 const checkForWinner = () => {
   let pitCount = 0,
     stones = 0;
-    gamePlay.player1.boardPitPositions.forEach((item) => {
+  gamePlay.player1.boardPitPositions.forEach((item) => {
     if (boardStones[item] === 0) pitCount++;
   });
   if (pitCount === 6) {
@@ -213,7 +211,7 @@ const checkForWinner = () => {
 // reset pit boards, remove play buttons, and generate a play again link.
 // adding a remove parameter removes the play again link.
 const resetPitSelect = (remove) => {
-  if (remove) {
+  if (remove === true) {
     document.querySelector("#play-again").remove();
     document.querySelectorAll(".player-info").forEach((item) => {
       item.removeAttribute("style");
@@ -325,7 +323,7 @@ const createPits = () => {
     document.querySelector("#board-pits-1").appendChild(pit);
     pitPosition--;
   }
-  delete pitPosition
+  delete pitPosition;
 };
 // whenever the pit stone objects are updated, also update the DOM.
 const updatePit = (position) => {
@@ -340,7 +338,7 @@ const updatePit = (position) => {
       document.getElementById(strPosition).appendChild(newStone);
     }
   }
-  delete numPosition
+  delete strPosition;
 };
 
 const updatePlayerPane = () => {
@@ -364,7 +362,7 @@ const playerPits = () => {
 };
 // handle click across the entire game scene
 const handleClick = (e) => {
-  let numPosition = Number(e.target.id)
+  let numPosition = Number(e.target.id);
   if (e.target.classList.contains("board-pit")) {
     if (winner) return;
     togglePit(numPosition);
