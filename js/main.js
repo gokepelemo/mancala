@@ -15,8 +15,7 @@ let homePitStones,
   gamePlay,
   extraTurn,
   playTurnBtn,
-  // todo: add validation to prevent numbers outside the range of 3 and 10
-  difficulty = 3;
+  difficulty = 1;
 
 /****** cached DOM elements ******/
 const infoPane = document.querySelector("#info-pane");
@@ -61,13 +60,19 @@ const setPlayerParams = () => {
   // set the number of stones in the homepit after each turn
   gamePlay.player1.homePit = homePitStones[7];
   gamePlay.player2.homePit = homePitStones[14];
+  document.getElementById(
+    gamePlay.player1.homePitPosition.toString()
+  ).innerHTML = homePitStones[7];
+  document.getElementById(
+    gamePlay.player2.homePitPosition.toString()
+  ).innerHTML = homePitStones[14];
   gamePlay[turn].pitSelected.innerHTML = `Home Pit`;
   gamePlay[`player1`].stonesSelected.innerHTML = gamePlay[`player1`].homePit;
   gamePlay[`player2`].stonesSelected.innerHTML = gamePlay[`player2`].homePit;
 };
 
 // on initialization, prevent stones from being added to the home pits.
-// on every other turn prevent stones from being added to the home pit
+// on every other turn, prevent stones from being added to the home pit
 // of the opposite player and the pit that they selected for the turn.
 const pitTainted = (position, init) => {
   let oppositePlayer = turn === "player1" ? "player2" : "player1";
@@ -115,8 +120,9 @@ const playTurn = (position) => {
     }
     dropPosition === 14 ? (dropPosition = 1) : dropPosition++;
   }
-  setPlayerParams(turn);
+  setPlayerParams();
   dropPosition = checkState(dropPosition);
+  if (gameOver()) return;
   turnCount++;
   switchTurn();
   return dropPosition;
@@ -124,7 +130,7 @@ const playTurn = (position) => {
 
 const checkState = (position) => {
   let turnState = position === 1 ? 14 : position - 1;
-  console.log(`Last pit was ${turnState}`);
+  // console.log(`Last pit was ${turnState}`);
   // if the last pit is a home pit, the current player plays again.
   if (turnState === 7 || turnState === 14) {
     extraTurn = true;
@@ -138,7 +144,7 @@ const checkState = (position) => {
       gamePlay.boardPosition(turnState, true)
     );
     console.log(
-      `Big capture of ${capturedStones} stones from ${gamePlay.boardPosition(
+      `Capture of ${capturedStones} stones from ${gamePlay.boardPosition(
         turnState,
         true
       )}. Ended on ${turnState}.`
@@ -151,25 +157,101 @@ const checkState = (position) => {
   return turnState;
 };
 const checkForWinner = () => {
-  let pitCount = 0;
+  let pitCount = 0,
+    stones = 0;
   document.querySelectorAll(`.player1`).forEach((item) => {
-    if (item.dataset.stones === 0) pitCount++;
+    if (Number(item.dataset.stones) === 0) pitCount++;
   });
   if (pitCount === 6) {
-    return true;
+    gamePlay.player2.boardPitPositions.forEach((item) => {
+      if (gamePlay.player2.homePitPosition !== item) {
+        stones += boardStones.collect(item);
+        console.log(`Collected ${stones} to end the game.`);
+      }
+    });
+    for (let i = 0; i < stones; i++) {
+      homePitStones.add(14);
+    }
   } else {
     pitCount = 0;
   }
   document.querySelectorAll(`.player2`).forEach((item) => {
-    if (item.dataset.stones === 0) pitCount++;
+    if (Number(item.dataset.stones) === 0) pitCount++;
+    if (pitCount === 6) {
+      gamePlay.player1.boardPitPositions.forEach((item) => {
+        if (gamePlay.player1.homePitPosition !== item) {
+          stones += boardStones.collect(item);
+          console.log(`Collected ${stones} to end the game. Position ${item}.`);
+        }
+      });
+      for (let i = 0; i < stones; i++) {
+        homePitStones.add(7);
+      }
+    }
   });
-  document.querySelectorAll(`.player1`).forEach((item) => {
-    if (item.dataset.stones === 0) pitCount++;
-  });
-  if (pitCount === 6) {
-    return true;
+  setPlayerParams();
+  if (stones > 0 || winner) {
+    if (gamePlay.player1.homePit === gamePlay.player2.homePit) {
+      winner = `tie`;
+      return winner;
+    } else {
+      winner =
+        gamePlay.player1.homePit > gamePlay.player2.homePit
+          ? `player1`
+          : `player2`;
+      return winner;
+    }
+  } else {
+    return false;
   }
-  return false;
+};
+
+// UX function: when we need to clear the board at the end of the game
+// reset pit boards, remove play buttons, and generate a play again link
+// adding a remove parameter removes the play again link
+const resetPitSelect = (remove) => {
+  if (remove) {
+    document.querySelector("#play-again").remove();
+    document.querySelectorAll(".player-info").forEach((item) => {
+      item.removeAttribute("style");
+      item.classList.add("play-fix");
+    });
+    return;
+  }
+  document.querySelectorAll(".board-pit").forEach((item) => {
+    item.style.border = "";
+  });
+  document.querySelectorAll(".play-turn-btn").forEach((item) => {
+    item.remove();
+  });
+  document.querySelectorAll(".player-info").forEach((item) => {
+    item.style.height = "20vmin";
+    item.classList.remove("play-fix");
+  });
+  let playAgainBtn = document.createElement("div");
+  playAgainBtn.innerHTML = "Play Again?";
+  playAgainBtn.classList.add("play-again");
+  playAgainBtn.id = "play-again";
+  playerPane.appendChild(playAgainBtn);
+  playAgainBtn.addEventListener("click", handleClick);
+};
+
+const gameOver = () => {
+  let gameState = checkForWinner();
+  // console.log(gameState);
+  if (gameState != false) {
+    switch (gameState) {
+      case "Tie":
+        createMessage(`It's a tie!`);
+        break;
+      default:
+        createMessage(`${gamePlay[gameState].name} Wins!`);
+        break;
+    }
+    resetPitSelect();
+  } else {
+    return false;
+  }
 };
 // create a message for the info pane.
 const createMessage = (msg, position) => {
@@ -178,6 +260,7 @@ const createMessage = (msg, position) => {
 
 // toggle pit selection.
 const togglePit = (position, reset) => {
+  if (winner) return;
   document.querySelectorAll(".board-pit").forEach((item) => {
     item.style.border = "";
     playerPits();
@@ -188,6 +271,7 @@ const togglePit = (position, reset) => {
 
 // switch turns unless they landed on a home pit on their last turn.
 const switchTurn = () => {
+  if (winner) return;
   if (extraTurn === true) {
     createMessage(`Landed on your home pit. You get an extra turn.`);
     extraTurn = false;
@@ -276,21 +360,32 @@ const updatePlayerPane = () => {
   gamePlay[turn].playerPane.appendChild(playTurnBtn);
   playTurnBtn.addEventListener("click", handleClick);
 };
-
+// highlight the pits that the current player can select
 const playerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
   document.querySelectorAll(selector).forEach((item) => {
     item.style.borderStyle = "dotted";
   });
 };
-
+// handle click across the entire game scene
 const handleClick = (e) => {
   if (e.target.classList.contains("board-pit")) {
+    if (winner) return;
     togglePit(Number(e.target.id));
     pitSelect(e.target.id);
   } else if (e.target.classList.contains("play-turn-btn")) {
+    if (winner) return;
     playTurn(e.target.dataset.pit);
+  } else if (e.target.classList.contains("play-again")) {
+    resetPitSelect(true);
+    init();
   }
+};
+
+const clearGameBoard = () => {
+  document.querySelectorAll(".board-pit").forEach((item) => {
+    item.remove();
+  });
 };
 
 const renderPlayerPane = () => {
@@ -299,6 +394,7 @@ const renderPlayerPane = () => {
 };
 
 const renderBoard = () => {
+  clearGameBoard();
   createPits();
   boardStones = {
     1: 0,
@@ -342,6 +438,48 @@ const renderBoard = () => {
   };
   turnCount = 0;
   initialPitStones();
+  setPlayerParams();
+};
+const startDialog = () => {
+  let dialogElements = {};
+  dialogElements.container = document.createElement("div");
+  dialogElements.container.classList.add("start-dialog");
+  dialogElements.container.id = "start-dialog";
+  // name inputs
+  dialogElements.player1Name = document.createElement("input");
+  dialogElements.player1Name.value = "Player 1";
+  dialogElements.player1Name.id = "player1NameInput";
+  dialogElements.player2Name = document.createElement("input");
+  dialogElements.player2Name.value = "Player 2";
+  dialogElements.player2Name.id = "player2NameInput";
+  //difficulty select
+  dialogElements.difficultyLabel = document.createElement("label");
+  dialogElements.difficultyLabel.for = "difficulty";
+  dialogElements.difficultyLabel.id = "difficulty-label";
+  dialogElements.difficultyLabel.innerText = "Difficulty";
+  dialogElements.difficulty = document.createElement("select");
+  dialogElements.difficulty.id = "difficulty";
+  dialogElements.difficulty.name = "difficulty";
+  dialogElements.difficultyOptions = [3, 4, 5, 6, 7, 8, 9];
+  dialogElements.difficultyOptions.forEach((item) => {
+    let option = document.createElement("option");
+    option.value = item;
+    option.innerHTML = item;
+    dialogElements.difficulty.appendChild(option);
+  });
+  // button
+  dialogElements.startButton = document.createElement("button");
+  dialogElements.startButton.id = "new-game-button";
+  dialogElements.startButton.innerText = "Start A New Game";
+  dialogElements.startButton.classList.add("new-game-button");
+  // append elements to container
+  dialogElements.container.appendChild(dialogElements.player1Name);
+  dialogElements.container.appendChild(dialogElements.player2Name);
+  dialogElements.container.appendChild(dialogElements.difficultyLabel);
+  dialogElements.container.appendChild(dialogElements.difficulty);
+  dialogElements.container.appendChild(dialogElements.startButton);
+  playerPane.appendChild(dialogElements.container);
+  delete dialogElements;
 };
 const init = () => {
   gamePlay = new GameScene();

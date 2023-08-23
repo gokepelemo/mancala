@@ -18,7 +18,7 @@ body {
 main {
   display: grid;
   grid-template-columns: 10vmin 120vmin 10vmin;
-  grid-template-rows: 10vmin 5vmin 40vmin 25vmin;
+  grid-template-rows: 10vmin 5vmin 40vmin 30vmin;
 }
 
 main * {
@@ -39,7 +39,8 @@ h2 {
 }
 
 h3 {
-  font-size: 3vmin;
+  font-size: 2.5vmin;
+  margin: 2vmin;
 }
 
 p {
@@ -64,17 +65,32 @@ button {
   border: var(--pit-border);
   width: 100%;
   height: 25vmin;
+  display: grid;
+  grid-template-columns: 60vmin 60vmin;
+  grid-template-rows: 20vmin 4.5vmin;
 }
 
 .player-info {
-  width: 50%;
-  height: 100%;
+  /* 25vmin by default, 20vmin on game over */
+  height: 25vmin;
   display: block;
   text-align: center;
+  /* default, removed on game over */
+}
+.play-fix {
+  grid-row: 1/span 2;
 }
 
 .player-info:first-of-type {
   border-right: var(--board-border);
+}
+
+.play-again {
+  grid-column: 1/span 2;
+  border-top: 1px solid grey;
+  padding: 0.25vmin;
+  font-size: 3vmin;
+  cursor: pointer;
 }
 
 .flex-ctr {
