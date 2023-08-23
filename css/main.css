@@ -1,7 +1,8 @@
 :root {
   --pit-border: 0.25vmin solid grey;
+  --selected-pit: 0.25vmin solid blue;
   --board-border: 0.75vmin solid grey;
-  --selected-pit: 0.75vmin solid red;
+  --stone-size: 1vmin; 
 }
 * {
   font-family: "JetBrains Mono", Arial, sans-serif;
@@ -83,7 +84,7 @@ button {
 }
 
 .home-pits {
-  width: 10vmin;
+  width: 7.5vmin;
   height: 15vmin;
   font-size: 4vmin;
   border-radius: 10%;
@@ -93,14 +94,14 @@ button {
 
 .home-pits:nth-of-type(4) {
   margin-top: 30vmin;
-  margin-left: 90vmin;
+  margin-left: 100vmin;
 }
 
 .board-pits > div {
   border-radius: 50%;
   border: var(--pit-border);
-  width: 12.5vmin;
-  height: 12.5vmin;
+  width: 15vmin;
+  height: 15vmin;
   margin: 0.5vmin;
   margin-top: -30vmin;
 }
@@ -121,12 +122,12 @@ button {
 }
 
 .stone {
-  width: 1.5vmin;
-  height: 1.5vmin;
+  width: var(--stone-size);
+  height: var(--stone-size);
   border-radius: 50%;
   display: flex;
   background-color: black;
-  border: 0.5px solid white;
+  border: 0.25px solid white;
 }
 
 .player-info > p {
