@@ -15,7 +15,7 @@ let homePitStones,
   gamePlay,
   extraTurn,
   playTurnBtn,
-// todo: add validation to prevent numbers outside the range of 3 and 10
+  // todo: add validation to prevent numbers outside the range of 3 and 10
   difficulty = 10;
 
 /****** cached DOM elements ******/
@@ -44,8 +44,8 @@ class GameScene {
         stonesSelected: document.querySelector("#stone-count-2"),
         boardPitPositions: [8, 9, 10, 11, 12, 13, 14],
       });
-// utility function: if we get an opposing side parameter, we return the
-// opposing side. if not, we return the player who owns the position
+    // utility function: if we get an opposing side parameter, we return the
+    // opposing side. if not, we return the player who owns the position
     this.boardPosition = function (position, opposingSide) {
       let player =
         position < this.player1.homePitPosition
@@ -58,7 +58,7 @@ class GameScene {
 
 /****** functions ******/
 const setPlayerParams = () => {
-// set the number of stones in the homepit after each turn
+  // set the number of stones in the homepit after each turn
   gamePlay.player1.homePit = homePitStones[7];
   gamePlay.player2.homePit = homePitStones[14];
   gamePlay[turn].pitSelected.innerHTML = `Home Pit`;
@@ -77,9 +77,9 @@ const pitTainted = (position, init) => {
 // add stones to the proper pits on game initialization
 const initialPitStones = () => {
   for (let i = 1; i <= 14; i++) {
-// taint pit for the current player
+    // taint pit for the current player
     if (pitTainted(i, true)) continue;
-// todo: difficulty should be set in dialog at the beginning of the game
+    // todo: difficulty should be set in dialog at the beginning of the game
     for (let j = 0; j < difficulty; j++) {
       addStone(document.getElementById(i.toString()));
     }
@@ -88,8 +88,8 @@ const initialPitStones = () => {
 
 // play a turn
 const playTurn = (position) => {
-// collect stones from a selected pit and distribute to all pits except the tainted
-// pits, return the id of the last pit we drop on
+  // collect stones from a selected pit and distribute to all pits except the tainted
+  // pits, return the id of the last pit we drop on
   let dropPosition,
     stones = boardStones.collect(position);
   selectedPit = position;
@@ -111,17 +111,18 @@ const playTurn = (position) => {
   }
   setPlayerParams(turn);
   dropPosition = checkState(dropPosition);
+  turnCount++;
   switchTurn();
   return dropPosition;
 };
 
 const checkState = (position) => {
   let turnState = position - 1;
-// if the last pit is a home pit, the current player plays again.
+  // if the last pit is a home pit, the current player plays again.
   if (turnState === 7 || turnState === 14) {
     extraTurn = true;
-// if the last pit is empty and on the current player's side, all the opponent's stones
-// on the opposite pit are added to the current player's home pit.
+    // if the last pit is empty and on the current player's side, all the opponent's stones
+    // on the opposite pit are added to the current player's home pit.
   } else if (
     boardStones[turnState] === 1 &&
     gamePlay[turn].boardPitPositions.indexOf(turnState) != -1
@@ -129,12 +130,17 @@ const checkState = (position) => {
     let capturedStones = boardStones.collect(
       gamePlay.boardPosition(turnState, true)
     );
-    console.log(`Big capture of ${capturedStones} stones from ${gamePlay.boardPosition(turnState, true)}. Ended on ${turnState}.`)
+    console.log(
+      `Big capture of ${capturedStones} stones from ${gamePlay.boardPosition(
+        turnState,
+        true
+      )}. Ended on ${turnState}.`
+    );
     for (let i = 0; i < capturedStones; i++) {
       homePitStones.add(gamePlay[turn].homePitPosition);
     }
   }
-// Return the last position that was played.
+  // Return the last position that was played.
   return turnState;
 };
 // create a message for the info pane.
@@ -190,7 +196,7 @@ const addStone = (positionElement) => {
 // add pits to the game board.
 const createPits = () => {
   let pitPosition = 1;
-// add pits for player 2.
+  // add pits for player 2.
   for (let i = 0; i < boardConfig.boardPits; i++) {
     let pit = document.createElement("div");
     pit.classList.add("board-pit");
@@ -294,6 +300,7 @@ const renderBoard = () => {
       return this[position];
     },
   };
+  turnCount = 0;
   initialPitStones();
 };
 const init = () => {
