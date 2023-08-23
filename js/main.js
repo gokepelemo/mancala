@@ -16,7 +16,7 @@ let homePitStones,
   extraTurn,
   playTurnBtn,
   // todo: add validation to prevent numbers outside the range of 3 and 10
-  difficulty = 10;
+  difficulty = 3;
 
 /****** cached DOM elements ******/
 const infoPane = document.querySelector("#info-pane");
@@ -85,6 +85,7 @@ const initialPitStones = () => {
       addStone(document.getElementById(i.toString()));
     }
   }
+  playerPits();
 };
 
 // play a turn
@@ -96,6 +97,10 @@ const playTurn = (position) => {
   selectedPit = position;
   position = Number(position);
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
+  if (stones === 0) {
+    createMessage(`That pit has no stones. Select another.`);
+    return;
+  }
   while (stones > 0) {
     if (pitTainted(dropPosition)) {
       dropPosition === 14 ? (dropPosition = 1) : dropPosition++;
@@ -118,7 +123,8 @@ const playTurn = (position) => {
 };
 
 const checkState = (position) => {
-  let turnState = position - 1;
+  let turnState = position === 1 ? 14 : position - 1;
+  console.log(`Last pit was ${turnState}`);
   // if the last pit is a home pit, the current player plays again.
   if (turnState === 7 || turnState === 14) {
     extraTurn = true;
@@ -144,6 +150,27 @@ const checkState = (position) => {
   // Return the last position that was played.
   return turnState;
 };
+const checkForWinner = () => {
+  let pitCount = 0;
+  document.querySelectorAll(`.player1`).forEach((item) => {
+    if (item.dataset.stones === 0) pitCount++;
+  });
+  if (pitCount === 6) {
+    return true;
+  } else {
+    pitCount = 0;
+  }
+  document.querySelectorAll(`.player2`).forEach((item) => {
+    if (item.dataset.stones === 0) pitCount++;
+  });
+  document.querySelectorAll(`.player1`).forEach((item) => {
+    if (item.dataset.stones === 0) pitCount++;
+  });
+  if (pitCount === 6) {
+    return true;
+  }
+  return false;
+};
 // create a message for the info pane.
 const createMessage = (msg, position) => {
   infoPane.innerHTML = msg;
@@ -153,6 +180,7 @@ const createMessage = (msg, position) => {
 const togglePit = (position, reset) => {
   document.querySelectorAll(".board-pit").forEach((item) => {
     item.style.border = "";
+    playerPits();
   });
   if (!reset)
     document.getElementById(position).style.border = "var(--selected-pit)";
@@ -165,7 +193,7 @@ const switchTurn = () => {
     extraTurn = false;
   } else {
     turn === "player1" ? (turn = "player2") : (turn = "player1");
-    createMessage(`${gamePlay[turn].name}'s turn`);
+    createMessage(`${gamePlay[turn].name}'s turn. Play from a dotted pit.`);
   }
   updatePlayerPane();
   setPlayerParams();
@@ -200,10 +228,10 @@ const addStone = (positionElement) => {
 // add pits to the game board.
 const createPits = () => {
   let pitPosition = 1;
-  // add pits for player 2.
+  // add pits for player 1.
   for (let i = 0; i < boardConfig.boardPits; i++) {
     let pit = document.createElement("div");
-    pit.classList.add("board-pit");
+    pit.classList.add("board-pit", "player1");
     pit.id = pitPosition;
     pit.dataset.stones = 0;
     document.querySelector("#board-pits-2").appendChild(pit);
@@ -211,10 +239,10 @@ const createPits = () => {
   }
   // skip the home pit and decrement.
   pitPosition = 13;
-  // add pits for player 1.
+  // add pits for player 2.
   for (let i = 0; i < boardConfig.boardPits; i++) {
     let pit = document.createElement("div");
-    pit.classList.add("board-pit");
+    pit.classList.add("board-pit", "player2");
     pit.id = pitPosition;
     pit.dataset.stones = 0;
     document.querySelector("#board-pits-1").appendChild(pit);
@@ -249,6 +277,13 @@ const updatePlayerPane = () => {
   playTurnBtn.addEventListener("click", handleClick);
 };
 
+const playerPits = () => {
+  let selector = turn === "player1" ? ".player1" : ".player2";
+  document.querySelectorAll(selector).forEach((item) => {
+    item.style.borderStyle = "dotted";
+  });
+};
+
 const handleClick = (e) => {
   if (e.target.classList.contains("board-pit")) {
     togglePit(Number(e.target.id));
@@ -260,7 +295,7 @@ const handleClick = (e) => {
 
 const renderPlayerPane = () => {
   updatePlayerPane();
-  createMessage(`Select a pit on your side to play a turn.`);
+  createMessage(`The dotted pits are yours. Select one to play from.`);
 };
 
 const renderBoard = () => {
