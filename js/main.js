@@ -62,7 +62,8 @@ const setPlayerParams = () => {
   gamePlay.player1.homePit = homePitStones[7];
   gamePlay.player2.homePit = homePitStones[14];
   gamePlay[turn].pitSelected.innerHTML = `Home Pit`;
-  gamePlay[turn].stonesSelected.innerHTML = gamePlay[turn].homePit;
+  gamePlay[`player1`].stonesSelected.innerHTML = gamePlay[`player1`].homePit;
+  gamePlay[`player2`].stonesSelected.innerHTML = gamePlay[`player2`].homePit;
 };
 
 // on initialization, prevent stones from being added to the home pits.
@@ -149,11 +150,12 @@ const createMessage = (msg, position) => {
 };
 
 // toggle pit selection.
-const togglePit = (position) => {
+const togglePit = (position, reset) => {
   document.querySelectorAll(".board-pit").forEach((item) => {
     item.style.border = "";
   });
-  document.getElementById(position).style.border = "var(--selected-pit)";
+  if (!reset)
+    document.getElementById(position).style.border = "var(--selected-pit)";
 };
 
 // switch turns unless they landed on a home pit on their last turn.
@@ -166,6 +168,8 @@ const switchTurn = () => {
     createMessage(`${gamePlay[turn].name}'s turn`);
   }
   updatePlayerPane();
+  setPlayerParams();
+  togglePit(0, true);
   return turn;
 };
 
@@ -256,6 +260,7 @@ const handleClick = (e) => {
 
 const renderPlayerPane = () => {
   updatePlayerPane();
+  createMessage(`Select a pit on your side to play a turn.`);
 };
 
 const renderBoard = () => {
