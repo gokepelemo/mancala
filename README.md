@@ -2,7 +2,7 @@
 ## A Browser-Based Implementation
 Mancala is a game that was created over 3000 years ago in Africa. The intention of gameplay is to have the most number of stones collected by the end of the game. There are two sides, one for each player. The game ends after all the pits on one player's side are empty.
 
-A coin is rolled at the beginning of the game to determine who starts it. The game starts when a player collects all the stones in one pit on their side, and distributes one in each subsequent pit including their home pit, but excluding their opponent's home pit and the pit that they started the turn from. If they land on an empty pit on their side, they take all the stones on the opposite side of the board and add it to their home pit.
+A coin is rolled at the beginning of the game to determine who starts it. The game starts when a player collects all the stones in one pit on their side, and distributes one in each subsequent pit including their home pit, but excluding their opponent's home pit and the pit that they started the turn from. If they land on an empty pit on their side, they take all the stones on the opposite side of the board and add them to their home pit.
 
 ### Wireframes
 Included with the repository in the wireframes directory.
