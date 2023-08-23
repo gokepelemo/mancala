@@ -78,6 +78,7 @@ const pitTainted = (position, init) => {
   let oppositePlayer = turn === "player1" ? "player2" : "player1";
   if (init && (position === 7 || position === 14)) return true;
   if (position === gamePlay[oppositePlayer].homePitPosition) return true;
+  delete oppositePlayer;
   return selectedPit ? position === selectedPit : false;
 };
 // add stones to the proper pits on game initialization
@@ -379,6 +380,14 @@ const handleClick = (e) => {
   } else if (e.target.classList.contains("play-again")) {
     resetPitSelect(true);
     init();
+  } else if (e.target.id === "new-game-button") {
+    gamePlay.player1.name =
+      document.getElementById("player1NameInput").value;
+    gamePlay.player2.name =
+      document.getElementById("player2NameInput").value;
+    difficulty = document.getElementById("difficulty").value;
+    initialPitStones();
+    toggleStartDialog();
   }
 };
 
@@ -437,49 +446,60 @@ const renderBoard = () => {
     },
   };
   turnCount = 0;
-  initialPitStones();
   setPlayerParams();
+  toggleStartDialog();
 };
-const startDialog = () => {
-  let dialogElements = {};
-  dialogElements.container = document.createElement("div");
-  dialogElements.container.classList.add("start-dialog");
-  dialogElements.container.id = "start-dialog";
-  // name inputs
-  dialogElements.player1Name = document.createElement("input");
-  dialogElements.player1Name.value = "Player 1";
-  dialogElements.player1Name.id = "player1NameInput";
-  dialogElements.player2Name = document.createElement("input");
-  dialogElements.player2Name.value = "Player 2";
-  dialogElements.player2Name.id = "player2NameInput";
-  //difficulty select
-  dialogElements.difficultyLabel = document.createElement("label");
-  dialogElements.difficultyLabel.for = "difficulty";
-  dialogElements.difficultyLabel.id = "difficulty-label";
-  dialogElements.difficultyLabel.innerText = "Difficulty";
-  dialogElements.difficulty = document.createElement("select");
-  dialogElements.difficulty.id = "difficulty";
-  dialogElements.difficulty.name = "difficulty";
-  dialogElements.difficultyOptions = [3, 4, 5, 6, 7, 8, 9];
-  dialogElements.difficultyOptions.forEach((item) => {
-    let option = document.createElement("option");
-    option.value = item;
-    option.innerHTML = item;
-    dialogElements.difficulty.appendChild(option);
-  });
-  // button
-  dialogElements.startButton = document.createElement("button");
-  dialogElements.startButton.id = "new-game-button";
-  dialogElements.startButton.innerText = "Start A New Game";
-  dialogElements.startButton.classList.add("new-game-button");
-  // append elements to container
-  dialogElements.container.appendChild(dialogElements.player1Name);
-  dialogElements.container.appendChild(dialogElements.player2Name);
-  dialogElements.container.appendChild(dialogElements.difficultyLabel);
-  dialogElements.container.appendChild(dialogElements.difficulty);
-  dialogElements.container.appendChild(dialogElements.startButton);
-  playerPane.appendChild(dialogElements.container);
-  delete dialogElements;
+const toggleStartDialog = () => {
+  if (document.getElementById("start-dialog")) {
+    document.getElementById("start-dialog").remove();
+    document.querySelector("#player-1-pane").removeAttribute("style");
+    document.querySelector("#player-2-pane").removeAttribute("style");
+  } else {
+    let dialogElements = {};
+    dialogElements.container = document.createElement("div");
+    dialogElements.container.classList.add("start-dialog");
+    dialogElements.container.id = "start-dialog";
+    // name inputs
+    dialogElements.player1Name = document.createElement("input");
+    dialogElements.player1Name.value = "Player 1";
+    dialogElements.player1Name.id = "player1NameInput";
+    dialogElements.player2Name = document.createElement("input");
+    dialogElements.player2Name.value = "Player 2";
+    dialogElements.player2Name.id = "player2NameInput";
+    //difficulty select
+    dialogElements.difficultyLabel = document.createElement("label");
+    dialogElements.difficultyLabel.for = "difficulty";
+    dialogElements.difficultyLabel.id = "difficulty-label";
+    dialogElements.difficultyLabel.innerText = "Difficulty";
+    dialogElements.difficulty = document.createElement("select");
+    dialogElements.difficulty.id = "difficulty";
+    dialogElements.difficulty.name = "difficulty";
+    dialogElements.difficultyOptions = [3, 4, 5, 6, 7, 8, 9, 10];
+    dialogElements.difficultyOptions.forEach((item) => {
+      let option = document.createElement("option");
+      option.value = item;
+      option.innerHTML = item;
+      dialogElements.difficulty.appendChild(option);
+    });
+    // button
+    dialogElements.startButton = document.createElement("button");
+    dialogElements.startButton.id = "new-game-button";
+    dialogElements.startButton.innerText = "Start A New Game";
+    dialogElements.startButton.classList.add("new-game-button");
+    // append elements to container
+    dialogElements.container.appendChild(dialogElements.player1Name);
+    dialogElements.container.appendChild(dialogElements.player2Name);
+    dialogElements.container.appendChild(dialogElements.difficultyLabel);
+    dialogElements.container.appendChild(dialogElements.difficulty);
+    dialogElements.container.appendChild(dialogElements.startButton);
+    document.querySelector("#player-1-pane").style.display = "none";
+    document.querySelector("#player-2-pane").style.display = "none";
+    playerPane.appendChild(dialogElements.container);
+    document
+      .querySelector("#new-game-button")
+      .addEventListener("click", handleClick);
+    delete dialogElements;
+  }
 };
 const init = () => {
   gamePlay = new GameScene();

@@ -156,6 +156,34 @@ button {
     display: inline-block;
 }
 
-.home-pits > div {
-    display: none;
+.start-dialog {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 60vmin 60vmin;
+  grid-column-start: 1;
+  column-gap: 1vmin;
+  row-gap: 3vmin;
+}
+
+.start-dialog * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.start-dialog button {
+  grid-column: 1/span 2;
+}
+
+.start-dialog input {
+  margin: 5vmin auto 0 auto;
+  width: 40vmin;
+}
+
+.start-dialog select {
+  width: 15vmin;
+  justify-content: left;
+}
+
+.start-dialog label {
+  justify-content: right;
 }
