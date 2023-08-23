@@ -129,7 +129,7 @@ const checkState = (position) => {
     let capturedStones = boardStones.collect(
       gamePlay.boardPosition(turnState, true)
     );
-    console.log(`Big capture of ${capturedStones} stones. Ended on ${turnState}.`)
+    console.log(`Big capture of ${capturedStones} stones from ${gamePlay.boardPosition(turnState, true)}. Ended on ${turnState}.`)
     for (let i = 0; i < capturedStones; i++) {
       homePitStones.add(gamePlay[turn].homePitPosition);
     }
