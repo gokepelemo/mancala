@@ -79,7 +79,7 @@ const initialPitStones = () => {
   for (let i = 1; i <= 14; i++) {
 // taint pit for the current player
     if (pitTainted(i, true)) continue;
-// todo: difficulty should be set in dialogue at the beginning of the game
+// todo: difficulty should be set in dialog at the beginning of the game
     for (let j = 0; j < difficulty; j++) {
       addStone(document.getElementById(i.toString()));
     }
