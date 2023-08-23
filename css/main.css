@@ -71,11 +71,9 @@ button {
 }
 
 .player-info {
-  /* 25vmin by default, 20vmin on game over */
   height: 25vmin;
   display: block;
   text-align: center;
-  /* default, removed on game over */
 }
 .play-fix {
   grid-row: 1/span 2;
