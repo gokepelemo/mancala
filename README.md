@@ -13,10 +13,10 @@ Included with the repository in the wireframes directory.
 - Javascript
 
 ### Screenshots
-<img src="/imgs/screenshot-start.png" width="250" alt="Start View" />
-![Coin Toss View](/imgs/screenshot-cointoss.png "Coin Toss View")
-![Gameplay View](/imgs/screenshot-gameplay.png "Gameplay View")
-![Gameplay](/imgs/mancala-screencapture.gif "Screen Capture")
+<img src="/imgs/screenshot-start.png" width="500" alt="Start View" />
+<img src="/imgs/screenshot-cointoss.png" alt="Coin Toss View" width="500" />
+<img src="/imgs/screenshot-gameplay.png" alt="Gameplay View" width="500" />
+<img src="/imgs/mancala-screencapture.gif" alt="Screen Capture" width="500" />
 
 ### Pseudocode
 1. Define required constants:
