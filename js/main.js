@@ -14,7 +14,6 @@ let homePitStones,
   winner,
   gamePlay,
   extraTurn,
-  playTurnBtn,
   // default difficulty level
   difficulty = 6;
 
@@ -22,6 +21,7 @@ let homePitStones,
 const infoPane = document.querySelector(`#info-pane`);
 const playerPane = document.querySelector(`#player-pane`);
 const gameBoard = document.querySelector(`#game-board`);
+let playTurnBtn, playAgainBtn, coinTossBtn, newGameBtn;
 
 /****** classes ******/
 class GameScene {
@@ -48,10 +48,10 @@ class GameScene {
       });
     // utility function: if we get an opposing side parameter, we return the
     // opposing side. if not, we return the player who owns the position
-    this.boardPosition = function (position, opposingSide) {
+    this.boardPosition = function (position, oppositeSide) {
       let player =
         position <= this.player1.homePitPosition ? `player1` : `player2`;
-      return opposingSide ? this.player2.homePitPosition - position : player;
+      return oppositeSide === true ? this.player2.homePitPosition - position : player;
     };
   }
 }
@@ -104,14 +104,14 @@ const initialPitStones = () => {
 
 // play a turn
 const playTurn = (position) => {
-// collect stones from a selected pit and distribute to all pits except the tainted
-// pits, return the id of the last pit we drop on.
+  // collect stones from a selected pit and distribute to all pits except the tainted
+  // pits, return the id of the last pit we drop on.
   position = Number(position);
   selectedPit = position;
   let dropPosition,
     stones = boardStones.collect(position);
-// dropPosition + 1 because we're dropping on the next pit.
-// board ends at 14 so 14 + 1 is 1.
+  // dropPosition + 1 because we're dropping on the next pit.
+  // board ends at 14 so 14 + 1 is 1.
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
   if (stones === 0) {
     createMessage(`That pit has no stones. Select another.`);
@@ -180,6 +180,7 @@ const checkState = (position) => {
   // Return the last pit that was played.
   return turnState;
 };
+
 const checkForWinner = () => {
   let pitCount = 0,
     stones = 0;
@@ -254,7 +255,7 @@ const resetPitSelect = (remove) => {
     item.style.height = "20vmin";
     item.classList.remove("pane-resize");
   });
-  let playAgainBtn = document.createElement("div");
+  playAgainBtn = document.createElement("div");
   playAgainBtn.innerHTML = "Play Again?";
   playAgainBtn.classList.add("play-again");
   playAgainBtn.id = "play-again";
@@ -279,6 +280,7 @@ const gameOver = () => {
     return false;
   }
 };
+
 // create a message for the info pane.
 const createMessage = (msg, position) => {
   infoPane.innerHTML = msg;
@@ -345,6 +347,7 @@ const createPits = () => {
   }
   delete pitPosition;
 };
+
 // whenever the pit stone objects are updated, also update the DOM.
 const updatePit = (position) => {
   let strPosition = position.toString();
@@ -373,7 +376,7 @@ const createPlayerBtn = (type) => {
     item.remove();
   });
   if (type === "toss" && turnCount === -1) {
-    let coinTossBtn = document.createElement("button");
+    coinTossBtn = document.createElement("button");
     coinTossBtn.classList.add("coin-toss-btn", "btn", "btn-info");
     coinTossBtn.id = "coin-toss-btn";
     coinTossBtn.innerHTML = "Coin Toss";
@@ -389,6 +392,7 @@ const createPlayerBtn = (type) => {
     playTurnBtn.addEventListener("click", handleClick);
   }
 };
+
 // highlight the pits that the current player can select
 const currentPlayerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
@@ -396,6 +400,7 @@ const currentPlayerPits = () => {
     item.style.borderStyle = "dotted";
   });
 };
+
 // handle click across the entire game scene
 const handleClick = (e) => {
   let numPosition = Number(e.target.id);
@@ -419,7 +424,7 @@ const handleClick = (e) => {
     createMessage(`Do a coin toss to choose the first player.`);
   } else if (e.target.id === "coin-toss-btn") {
     let coinSide = coinToss();
-    gamePlay[turn].pitSelected.innerHTML = `Rolled ${coinSide}`
+    gamePlay[turn].pitSelected.innerHTML = `Rolled ${coinSide}`;
     gamePlay[turn].coinSideTossed = coinSide;
     if (
       gamePlay.player1.coinSideTossed !== "" &&
@@ -440,8 +445,10 @@ const handleClick = (e) => {
         currentPlayerPits();
         turnCount = 0;
       }
-    } else if (gamePlay.player1.coinSideTossed === "" ||
-    gamePlay.player2.coinSideTossed === "") {
+    } else if (
+      gamePlay.player1.coinSideTossed === "" ||
+      gamePlay.player2.coinSideTossed === ""
+    ) {
       turn = turn === `player1` ? `player2` : `player1`;
       createPlayerBtn(`toss`);
       createMessage(`${gamePlay[turn].name}'s coin toss.`);
@@ -500,6 +507,7 @@ const renderBoard = () => {
   setPlayerParams();
   toggleStartDialog();
 };
+
 const toggleStartDialog = () => {
   if (document.getElementById("start-dialog")) {
     document.getElementById("start-dialog").remove();
@@ -537,7 +545,11 @@ const toggleStartDialog = () => {
     dialogElements.startButton = document.createElement("button");
     dialogElements.startButton.id = "new-game-button";
     dialogElements.startButton.innerText = "Start A New Game";
-    dialogElements.startButton.classList.add("new-game-button", "btn", "btn-primary");
+    dialogElements.startButton.classList.add(
+      "new-game-button",
+      "btn",
+      "btn-primary"
+    );
     // append elements to container
     dialogElements.container.appendChild(dialogElements.player1Name);
     dialogElements.container.appendChild(dialogElements.player2Name);
@@ -547,12 +559,12 @@ const toggleStartDialog = () => {
     document.querySelector("#player-1-pane").style.display = "none";
     document.querySelector("#player-2-pane").style.display = "none";
     playerPane.appendChild(dialogElements.container);
-    document
-      .querySelector("#new-game-button")
-      .addEventListener("click", handleClick);
+    newGameBtn = document.querySelector("#new-game-button");
+    newGameBtn.addEventListener("click", handleClick);
     delete dialogElements;
   }
 };
+
 const init = () => {
   gamePlay = new GameScene();
   renderBoard();

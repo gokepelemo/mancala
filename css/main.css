@@ -90,7 +90,7 @@ button {
 .play-again {
   grid-column: 1 / span 2;
   border-top: 1px solid grey;
-  padding: 0.25vmin;
+  padding: 0.1vmin;
   font-size: 3vmin;
   cursor: pointer;
 }
