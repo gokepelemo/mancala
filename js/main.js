@@ -95,10 +95,10 @@ const initialPitStones = () => {
 const playTurn = (position) => {
   // collect stones from a selected pit and distribute to all pits except the tainted
   // pits, return the id of the last pit we drop on.
-  let dropPosition,
-    stones = boardStones.collect(position);
   position = Number(position);
   selectedPit = position;
+  let dropPosition,
+    stones = boardStones.collect(position);
   // drop position +1 because we're dropping on the next position.
   // board ends at 14 so 14 +1 is 1.
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
