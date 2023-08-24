@@ -8,15 +8,14 @@ const boardConfig = {
 /****** state variables ******/
 let homePitStones,
   boardStones,
-  // todo: complete coin toss
   turn = "player1",
-  turnCount = 0,
+  turnCount,
   selectedPit,
   winner,
   gamePlay,
   extraTurn,
   playTurnBtn,
-  // set the default difficulty level
+  // default difficulty level
   difficulty = 6;
 
 /****** cached DOM elements ******/
@@ -31,6 +30,7 @@ class GameScene {
       name: "Player 1",
       homePit: 0,
       homePitPosition: 7,
+      coinSideTossed: "",
       playerPane: document.querySelector("#player-1-pane"),
       pitSelected: document.querySelector("#pit-info-1"),
       stonesSelected: document.querySelector("#stone-count-1"),
@@ -39,6 +39,7 @@ class GameScene {
       (this.player2 = {
         name: "Player 2",
         homePit: 0,
+        coinSideTossed: "",
         homePitPosition: 14,
         playerPane: document.querySelector("#player-2-pane"),
         pitSelected: document.querySelector("#pit-info-2"),
@@ -56,6 +57,11 @@ class GameScene {
 }
 
 /****** functions ******/
+// coin toss.
+const coinToss = () => {
+  return Math.ceil(Math.random() * 2) === 1 ? "Heads" : "Tails";
+};
+
 const setPlayerParams = () => {
   // set the player params after each DOM update
   ["player1", "player2"].forEach((item) => {
@@ -74,7 +80,12 @@ const setPlayerParams = () => {
 // of the opposite player and the pit that they selected for the turn.
 const pitTainted = (position, init) => {
   let oppositePlayer = turn === "player1" ? "player2" : "player1";
-  if (init === true && (position === gamePlay.player1.homePitPosition || position === gamePlay.player2.homePitPosition)) return true;
+  if (
+    init === true &&
+    (position === gamePlay.player1.homePitPosition ||
+      position === gamePlay.player2.homePitPosition)
+  )
+    return true;
   if (position === gamePlay[oppositePlayer].homePitPosition) return true;
   delete oppositePlayer;
   return selectedPit ? position === selectedPit : false;
@@ -88,7 +99,6 @@ const initialPitStones = () => {
       boardStones.add(i);
     }
   }
-  playerPits();
 };
 
 // play a turn
@@ -108,17 +118,24 @@ const playTurn = (position) => {
   }
   while (stones > 0) {
     if (pitTainted(dropPosition)) {
-      dropPosition === gamePlay.player2.homePitPosition ? (dropPosition = 1) : dropPosition++;
+      dropPosition === gamePlay.player2.homePitPosition
+        ? (dropPosition = 1)
+        : dropPosition++;
       continue;
     }
-    if (dropPosition === gamePlay.player1.homePitPosition || dropPosition === gamePlay.player2.homePitPosition) {
+    if (
+      dropPosition === gamePlay.player1.homePitPosition ||
+      dropPosition === gamePlay.player2.homePitPosition
+    ) {
       homePitStones.add(dropPosition);
       stones--;
     } else {
       boardStones.add(dropPosition);
       stones--;
     }
-    dropPosition === gamePlay.player2.homePitPosition ? (dropPosition = 1) : dropPosition++;
+    dropPosition === gamePlay.player2.homePitPosition
+      ? (dropPosition = 1)
+      : dropPosition++;
   }
   setPlayerParams();
   dropPosition = checkState(dropPosition);
@@ -131,10 +148,14 @@ const playTurn = (position) => {
 const checkState = (position) => {
   // turn state -1 because the loop increments before testing for stones left
   // board ends at 14, so -1 of 1 is 14
-  let turnState = position === 1 ? gamePlay.player2.homePitPosition : position - 1;
+  let turnState =
+    position === 1 ? gamePlay.player2.homePitPosition : position - 1;
   // console.log(`Last pit was ${turnState}`); // debug logging
   // if the last pit is a home pit, the current player plays again.
-  if (turnState === gamePlay.player1.homePitPosition || turnState === gamePlay.player2.homePitPosition) {
+  if (
+    turnState === gamePlay.player1.homePitPosition ||
+    turnState === gamePlay.player2.homePitPosition
+  ) {
     extraTurn = true;
     // if the last pit is empty and on the current player's side, all the opponent's stones
     // on the opposite pit are added to the current player's home pit.
@@ -162,8 +183,9 @@ const checkForWinner = () => {
   let pitCount = 0,
     stones = 0;
   pitCount = gamePlay.player1.boardPitPositions.reduce((accumulator, item) => {
-    return accumulator = boardStones[item] === 0 ? accumulator + 1 : accumulator
-  },0);
+    return (accumulator =
+      boardStones[item] === 0 ? accumulator + 1 : accumulator);
+  }, 0);
   if (pitCount === gamePlay.player1.boardPitPositions.length) {
     gamePlay.player2.boardPitPositions.forEach((item) => {
       if (gamePlay.player2.homePitPosition !== item) {
@@ -178,8 +200,9 @@ const checkForWinner = () => {
     pitCount = 0;
   }
   pitCount = gamePlay.player2.boardPitPositions.reduce((accumulator, item) => {
-    return accumulator = boardStones[item] === 0 ? accumulator + 1 : accumulator
-  },0);
+    return (accumulator =
+      boardStones[item] === 0 ? accumulator + 1 : accumulator);
+  }, 0);
   if (pitCount === gamePlay.player2.boardPitPositions.length) {
     gamePlay.player1.boardPitPositions.forEach((item) => {
       if (gamePlay.player1.homePitPosition !== item) {
@@ -265,7 +288,7 @@ const togglePit = (position, reset) => {
   if (winner) return;
   document.querySelectorAll(".board-pit").forEach((item) => {
     item.style.border = "";
-    playerPits();
+    currentPlayerPits();
   });
   if (!reset)
     document.getElementById(position).style.border = "var(--selected-pit)";
@@ -281,15 +304,10 @@ const switchTurn = () => {
     turn === "player1" ? (turn = "player2") : (turn = "player1");
     createMessage(`${gamePlay[turn].name}'s turn. Play from a dotted pit.`);
   }
-  updatePlayerPane();
+  createPlayerBtn();
   setPlayerParams();
   togglePit(0, true);
   return turn;
-};
-
-// coin toss.
-const coinToss = () => {
-  return Math.ceil(Math.random() * 2) === 1 ? "Heads" : "Tails";
 };
 
 // handle player selecting a pit.
@@ -329,7 +347,10 @@ const createPits = () => {
 // whenever the pit stone objects are updated, also update the DOM.
 const updatePit = (position) => {
   let strPosition = position.toString();
-  if (position === gamePlay.player1.homePitPosition || position === gamePlay.player2.homePitPosition) {
+  if (
+    position === gamePlay.player1.homePitPosition ||
+    position === gamePlay.player2.homePitPosition
+  ) {
     document.getElementById(strPosition).innerHTML = homePitStones[position];
   } else {
     document.getElementById(strPosition).innerHTML = "";
@@ -343,20 +364,32 @@ const updatePit = (position) => {
 };
 
 // creates the play turn button
-const updatePlayerPane = () => {
+const createPlayerBtn = (type) => {
+  document.querySelectorAll(".coin-toss-btn").forEach((item) => {
+    item.remove();
+  });
   document.querySelectorAll(".play-turn-btn").forEach((item) => {
     item.remove();
   });
-  playTurnBtn = document.createElement("button");
-  playTurnBtn.classList.add("play-turn-btn", "btn", "btn-light");
-  playTurnBtn.id = "play-turn-btn";
-  playTurnBtn.innerHTML = "Play Turn";
-  playTurnBtn.disabled = true;
-  gamePlay[turn].playerPane.appendChild(playTurnBtn);
-  playTurnBtn.addEventListener("click", handleClick);
+  if (type === "toss" && turnCount === -1) {
+    let coinTossBtn = document.createElement("button");
+    coinTossBtn.classList.add("coin-toss-btn", "btn", "btn-light");
+    coinTossBtn.id = "coin-toss-btn";
+    coinTossBtn.innerHTML = "Coin Toss";
+    gamePlay[turn].playerPane.appendChild(coinTossBtn);
+    coinTossBtn.addEventListener("click", handleClick);
+  } else {
+    playTurnBtn = document.createElement("button");
+    playTurnBtn.classList.add("play-turn-btn", "btn", "btn-light");
+    playTurnBtn.id = "play-turn-btn";
+    playTurnBtn.innerHTML = "Play Turn";
+    playTurnBtn.disabled = true;
+    gamePlay[turn].playerPane.appendChild(playTurnBtn);
+    playTurnBtn.addEventListener("click", handleClick);
+  }
 };
 // highlight the pits that the current player can select
-const playerPits = () => {
+const currentPlayerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
   document.querySelectorAll(selector).forEach((item) => {
     item.style.borderStyle = "dotted";
@@ -369,10 +402,10 @@ const handleClick = (e) => {
     if (winner) return;
     togglePit(numPosition);
     pitSelect(numPosition);
-  } else if (e.target.classList.contains("play-turn-btn")) {
+  } else if (e.target.id === "play-turn-btn") {
     if (winner) return;
     playTurn(e.target.dataset.pit);
-  } else if (e.target.classList.contains("play-again")) {
+  } else if (e.target.id === "play-again") {
     resetPitSelect(true);
     init();
   } else if (e.target.id === "new-game-button") {
@@ -382,7 +415,35 @@ const handleClick = (e) => {
     initialPitStones();
     setPlayerParams();
     toggleStartDialog();
-    createMessage(`The dotted pits are yours. Select one to play from.`);
+    createMessage(`Do a coin toss to choose the first player.`);
+  } else if (e.target.id === "coin-toss-btn") {
+    let coinSide = coinToss();
+    gamePlay[turn].pitSelected.innerHTML = `Rolled ${coinSide}`
+    gamePlay[turn].coinSideTossed = coinSide;
+    if (
+      gamePlay.player1.coinSideTossed !== "" &&
+      gamePlay.player2.coinSideTossed !== ""
+    ) {
+      if (gamePlay.player1.coinSideTossed === gamePlay.player2.coinSideTossed) {
+        createMessage(`Rolled the same side. Try again.`);
+        gamePlay.player1.coinSideTossed = "";
+        gamePlay.player2.coinSideTossed = "";
+        turn = `player1`;
+        createPlayerBtn(`toss`);
+      } else {
+        gamePlay.player1.coinSideTossed === `Heads`
+          ? (turn = `player1`)
+          : (turn = `player2`);
+        createMessage(`${gamePlay[turn].name} starts. Play from a dotted pit.`);
+        createPlayerBtn();
+        turnCount = 0;
+        currentPlayerPits();
+      }
+    } else {
+      turn = `player2`;
+      createPlayerBtn(`toss`);
+      createMessage(`${gamePlay[turn].name}'s coin toss.`);
+    }
   }
 };
 
@@ -393,8 +454,7 @@ const clearGameBoard = () => {
 };
 
 const renderPlayerPane = () => {
-  updatePlayerPane();
-  createMessage(`Choose your player names and difficulty level.`);
+  createPlayerBtn("toss");
 };
 
 const renderBoard = () => {
@@ -434,7 +494,7 @@ const renderBoard = () => {
       return this[position];
     },
   };
-  turnCount = 0;
+  turnCount = -1;
   setPlayerParams();
   toggleStartDialog();
 };
