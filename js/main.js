@@ -94,12 +94,13 @@ const initialPitStones = () => {
 // play a turn
 const playTurn = (position) => {
   // collect stones from a selected pit and distribute to all pits except the tainted
-  // pits, return the id of the last pit we drop on
+  // pits, return the id of the last pit we drop on.
   let dropPosition,
     stones = boardStones.collect(position);
   selectedPit = position;
   position = Number(position);
-  // drop position +1 because we're dropping on the next position, board end at 14.
+  // drop position +1 because we're dropping on the next position.
+  // board ends at 14 so 14 +1 is 1.
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
   if (stones === 0) {
     createMessage(`That pit has no stones. Select another.`);
