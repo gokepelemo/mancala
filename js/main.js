@@ -358,7 +358,7 @@ const updatePlayerPane = () => {
 const playerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
   document.querySelectorAll(selector).forEach((item) => {
-    item.style.borderStyle = "dashed";
+    item.style.borderStyle = "dotted";
   });
 };
 // handle click across the entire game scene
