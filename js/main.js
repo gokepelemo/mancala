@@ -146,8 +146,8 @@ const playTurn = (position) => {
   }
   setPlayerParams();
   dropPosition = checkState(dropPosition);
-  if (gameOver()) return;
   turnCount++;
+  if (gameOver()) return;
   switchTurn();
   return dropPosition;
 };
