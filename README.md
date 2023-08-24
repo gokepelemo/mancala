@@ -104,4 +104,5 @@ Deployed on [Github Pages](https://gokepelemo.github.io/mancala). Simply enter t
 
 #### Next Steps
 - Refactoring
+- Add game play animation
 - Remote opponent
