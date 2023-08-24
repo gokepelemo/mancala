@@ -51,7 +51,9 @@ class GameScene {
     this.boardPosition = function (position, oppositeSide) {
       let player =
         position <= this.player1.homePitPosition ? `player1` : `player2`;
-      return oppositeSide === true ? this.player2.homePitPosition - position : player;
+      return oppositeSide === true
+        ? this.player2.homePitPosition - position
+        : player;
     };
   }
 }
@@ -118,12 +120,16 @@ const playTurn = (position) => {
     return;
   }
   while (stones > 0) {
+    // if the pit is tainted, skip this iteration of the loop and move on to the
+    // next position dropping no stones. if dropPosition is 14, next position is 1.
     if (pitTainted(dropPosition)) {
       dropPosition === gamePlay.player2.homePitPosition
         ? (dropPosition = 1)
         : dropPosition++;
       continue;
     }
+    // drop stones in home pits for home pit positions and for
+    // board pits in board pit positions.
     if (
       dropPosition === gamePlay.player1.homePitPosition ||
       dropPosition === gamePlay.player2.homePitPosition
@@ -192,7 +198,7 @@ const checkForWinner = () => {
     gamePlay.player2.boardPitPositions.forEach((item) => {
       if (gamePlay.player2.homePitPosition !== item) {
         stones += boardStones.collect(item);
-        console.log(`Collected ${stones} to end the game.`);
+        console.log(`Collected ${stones} to end the game. Position ${item}.`);
       }
     });
     for (let i = 0; i < stones; i++) {
@@ -362,6 +368,9 @@ const updatePit = (position) => {
       let newStone = document.createElement("div");
       newStone.classList.add("stone");
       document.getElementById(strPosition).appendChild(newStone);
+      setTimeout(function () {
+        newStone.style.height = `var(--stone-size)`;
+      }, 200);
     }
   }
   delete strPosition;

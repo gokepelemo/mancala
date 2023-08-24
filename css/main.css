@@ -5,6 +5,7 @@
   --stone-size: 1vmin;
   --stone-size-m: 1.5vmin;
   --stone-size-l: 2vmin;
+  --transition: all 500ms ease-in-out;
 }
 * {
   font-family: "JetBrains Mono", Arial, sans-serif;
@@ -122,6 +123,7 @@ button {
   height: 15vmin;
   margin: 0.5vmin;
   margin-top: -30vmin;
+  transition: var(--transition);
 }
 
 .board-pits:nth-of-type(2) > div {
@@ -141,11 +143,12 @@ button {
 
 .stone {
   width: var(--stone-size);
-  height: var(--stone-size);
+  height: 0;
   border-radius: 50%;
   display: flex;
   background-color: black;
-  border: 0.25px solid white;
+  border: 0.1px solid white;
+  transition: var(--transition);
 }
 
 .player-info > p {
@@ -195,7 +198,8 @@ button {
 #device-warning {
   display: none;
   width: 30vmin;
-  margin: 5vmin auto;
+  margin: 0 auto;
+  grid-column: 1/span 3;
 }
 
 @media (max-width: 600px) {

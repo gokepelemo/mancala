@@ -11,8 +11,12 @@ Included with the repository in the wireframes directory.
 - HTML
 - CSS
 - Javascript
-- Bootstrap
-- Google Fonts
+
+### Screenshots
+![Start View](/imgs/screenshot-start.png "Start View")
+![Coin Toss View](/imgs/screenshot-cointoss.png "Coin Toss View")
+![Gameplay View](/imgs/screenshot-gameplay.png "Gameplay View")
+![Gameplay](/imgs/mancala-screencapture.gif "Screen Capture")
 
 ### Pseudocode
 1. Define required constants:
@@ -75,7 +79,7 @@ Included with the repository in the wireframes directory.
       - If all the pits on both sides are empty, the winner variable is set to the owner of the home pit with the highest number of stones.
       - Player panes are updated with the final information, and the Play Again button is rendered.
 
-#### Game play description
+#### Gameplay Description
 1. The players enter their names and select a difficulty level for the gameplay.
 2. Their difficulty level determines the number of stones in each pit.
 3. The game starts with the same number of stones in each pit and empty home pits.
