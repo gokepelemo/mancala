@@ -8,7 +8,7 @@ const boardConfig = {
 /****** state variables ******/
 let homePitStones,
   boardStones,
-  turn = "player1",
+  turn = `player1`,
   turnCount,
   selectedPit,
   winner,
@@ -19,31 +19,31 @@ let homePitStones,
   difficulty = 6;
 
 /****** cached DOM elements ******/
-const infoPane = document.querySelector("#info-pane");
-const playerPane = document.querySelector("#player-pane");
-const gameBoard = document.querySelector("#game-board");
+const infoPane = document.querySelector(`#info-pane`);
+const playerPane = document.querySelector(`#player-pane`);
+const gameBoard = document.querySelector(`#game-board`);
 
 /****** classes ******/
 class GameScene {
   constructor() {
     (this.player1 = {
-      name: "Player 1",
+      name: `Player 1`,
       homePit: 0,
       homePitPosition: 7,
-      coinSideTossed: "",
-      playerPane: document.querySelector("#player-1-pane"),
-      pitSelected: document.querySelector("#pit-info-1"),
-      stonesSelected: document.querySelector("#stone-count-1"),
+      coinSideTossed: ``,
+      playerPane: document.querySelector(`#player-1-pane`),
+      pitSelected: document.querySelector(`#pit-info-1`),
+      stonesSelected: document.querySelector(`#stone-count-1`),
       boardPitPositions: [1, 2, 3, 4, 5, 6],
     }),
       (this.player2 = {
-        name: "Player 2",
+        name: `Player 2`,
         homePit: 0,
-        coinSideTossed: "",
+        coinSideTossed: ``,
         homePitPosition: 14,
-        playerPane: document.querySelector("#player-2-pane"),
-        pitSelected: document.querySelector("#pit-info-2"),
-        stonesSelected: document.querySelector("#stone-count-2"),
+        playerPane: document.querySelector(`#player-2-pane`),
+        pitSelected: document.querySelector(`#pit-info-2`),
+        stonesSelected: document.querySelector(`#stone-count-2`),
         boardPitPositions: [8, 9, 10, 11, 12, 13],
       });
     // utility function: if we get an opposing side parameter, we return the
@@ -59,12 +59,12 @@ class GameScene {
 /****** functions ******/
 // coin toss.
 const coinToss = () => {
-  return Math.ceil(Math.random() * 2) === 1 ? "Heads" : "Tails";
+  return Math.ceil(Math.random() * 2) === 1 ? `Heads` : `Tails`;
 };
 
 const setPlayerParams = () => {
-  // set the player params after each DOM update
-  ["player1", "player2"].forEach((item) => {
+  // set the player params after each DOM update.
+  [`player1`, `player2`].forEach((item) => {
     gamePlay[item].homePit = homePitStones[gamePlay[item].homePitPosition];
     document.getElementById(
       gamePlay[item].homePitPosition.toString()
@@ -79,7 +79,7 @@ const setPlayerParams = () => {
 // on every other turn, prevent stones from being added to the home pit
 // of the opposite player and the pit that they selected for the turn.
 const pitTainted = (position, init) => {
-  let oppositePlayer = turn === "player1" ? "player2" : "player1";
+  let oppositePlayer = turn === `player1` ? `player2` : `player1`;
   if (
     init === true &&
     (position === gamePlay.player1.homePitPosition ||
@@ -90,6 +90,7 @@ const pitTainted = (position, init) => {
   delete oppositePlayer;
   return selectedPit ? position === selectedPit : false;
 };
+
 // add stones to the proper pits on game initialization
 const initialPitStones = () => {
   for (let i = 1; i <= gamePlay.player2.homePitPosition; i++) {
@@ -103,14 +104,14 @@ const initialPitStones = () => {
 
 // play a turn
 const playTurn = (position) => {
-  // collect stones from a selected pit and distribute to all pits except the tainted
-  // pits, return the id of the last pit we drop on.
+// collect stones from a selected pit and distribute to all pits except the tainted
+// pits, return the id of the last pit we drop on.
   position = Number(position);
   selectedPit = position;
   let dropPosition,
     stones = boardStones.collect(position);
-  // drop position +1 because we're dropping on the next position.
-  // board ends at 14 so 14 +1 is 1.
+// dropPosition + 1 because we're dropping on the next pit.
+// board ends at 14 so 14 + 1 is 1.
   position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
   if (stones === 0) {
     createMessage(`That pit has no stones. Select another.`);
@@ -176,7 +177,7 @@ const checkState = (position) => {
       homePitStones.add(gamePlay[turn].homePitPosition);
     }
   }
-  // Return the last position that was played.
+  // Return the last pit that was played.
   return turnState;
 };
 const checkForWinner = () => {
@@ -436,11 +437,12 @@ const handleClick = (e) => {
           : (turn = `player2`);
         createMessage(`${gamePlay[turn].name} starts. Play from a dotted pit.`);
         createPlayerBtn();
-        turnCount = 0;
         currentPlayerPits();
+        turnCount = 0;
       }
-    } else {
-      turn = `player2`;
+    } else if (gamePlay.player1.coinSideTossed === "" ||
+    gamePlay.player2.coinSideTossed === "") {
+      turn = turn === `player1` ? `player2` : `player1`;
       createPlayerBtn(`toss`);
       createMessage(`${gamePlay[turn].name}'s coin toss.`);
     }
