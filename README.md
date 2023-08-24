@@ -13,7 +13,7 @@ Included with the repository in the wireframes directory.
 - Javascript
 
 ### Screenshots
-![Start View](/imgs/screenshot-start.png "Start View")
+<img src="/imgs/screenshot-start.png" width="250" alt="Start View" />
 ![Coin Toss View](/imgs/screenshot-cointoss.png "Coin Toss View")
 ![Gameplay View](/imgs/screenshot-gameplay.png "Gameplay View")
 ![Gameplay](/imgs/mancala-screencapture.gif "Screen Capture")
