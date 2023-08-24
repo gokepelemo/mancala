@@ -4,19 +4,27 @@ Mancala is a game that was created over 3000 years ago in Africa. The intention 
 
 A coin is rolled at the beginning of the game to determine who starts it. The game starts when a player collects all the stones in one pit on their side, and distributes one in each subsequent pit including their home pit, but excluding their opponent's home pit and the pit that they started the turn from. If they land on an empty pit on their side, they take all the stones on the opposite side of the board and add them to their home pit.
 
-### Wireframes
-Included with the repository in the wireframes directory.
-
-### Technologies used
+### Technologies Used
 - HTML
 - CSS
 - Javascript
 
+### Wireframes
+Included with the repository in the wireframes directory.
+
 ### Screenshots
-<img src="/imgs/screenshot-start.png" width="500" alt="Start View" />
-<img src="/imgs/screenshot-cointoss.png" alt="Coin Toss View" width="500" />
-<img src="/imgs/screenshot-gameplay.png" alt="Gameplay View" width="500" />
+#### Animated
 <img src="/imgs/mancala-screencapture.gif" alt="Screen Capture" width="500" />
+
+#### Start Game Dialog
+<img src="/imgs/screenshot-start.png" width="500" alt="Start View" />
+
+#### Coin Toss
+<img src="/imgs/screenshot-cointoss.png" alt="Coin Toss View" width="500" />
+
+#### Game Play
+<img src="/imgs/screenshot-gameplay.png" alt="Gameplay View" width="500" />
+
 
 ### Pseudocode
 1. Define required constants:
