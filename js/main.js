@@ -373,14 +373,14 @@ const createPlayerBtn = (type) => {
   });
   if (type === "toss" && turnCount === -1) {
     let coinTossBtn = document.createElement("button");
-    coinTossBtn.classList.add("coin-toss-btn", "btn", "btn-light");
+    coinTossBtn.classList.add("coin-toss-btn", "btn", "btn-info");
     coinTossBtn.id = "coin-toss-btn";
     coinTossBtn.innerHTML = "Coin Toss";
     gamePlay[turn].playerPane.appendChild(coinTossBtn);
     coinTossBtn.addEventListener("click", handleClick);
   } else {
     playTurnBtn = document.createElement("button");
-    playTurnBtn.classList.add("play-turn-btn", "btn", "btn-light");
+    playTurnBtn.classList.add("play-turn-btn", "btn", "btn-dark");
     playTurnBtn.id = "play-turn-btn";
     playTurnBtn.innerHTML = "Play Turn";
     playTurnBtn.disabled = true;
@@ -535,7 +535,7 @@ const toggleStartDialog = () => {
     dialogElements.startButton = document.createElement("button");
     dialogElements.startButton.id = "new-game-button";
     dialogElements.startButton.innerText = "Start A New Game";
-    dialogElements.startButton.classList.add("new-game-button");
+    dialogElements.startButton.classList.add("new-game-button", "btn", "btn-primary");
     // append elements to container
     dialogElements.container.appendChild(dialogElements.player1Name);
     dialogElements.container.appendChild(dialogElements.player2Name);
