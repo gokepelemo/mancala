@@ -145,7 +145,7 @@ const checkState = (position) => {
       gamePlay.boardPosition(turnState, true)
     );
     console.log(
-      `Capture of ${capturedStones} stones from ${gamePlay.boardPosition(
+      `Capture of ${capturedStones} stone(s) from ${gamePlay.boardPosition(
         turnState,
         true
       )}. Ended on ${turnState}.`
