@@ -20,6 +20,7 @@ body {
 
 main {
   display: grid;
+  margin: 0 auto;
   grid-template-columns: 10vmin 120vmin 10vmin;
   grid-template-rows: 10vmin 5vmin 40vmin 30vmin;
 }

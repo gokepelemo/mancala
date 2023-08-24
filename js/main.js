@@ -244,7 +244,7 @@ const resetPitSelect = (remove) => {
     return;
   }
   document.querySelectorAll(".board-pit").forEach((item) => {
-    item.style.removeAttribute();
+    item.removeAttribute("style");
   });
   document.querySelectorAll(".play-turn-btn").forEach((item) => {
     item.remove();
