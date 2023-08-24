@@ -199,7 +199,6 @@ button {
   display: none;
   width: 30vmin;
   margin: 0 auto;
-  grid-column: 1/span 3;
 }
 
 @media (max-width: 600px) {

@@ -12,6 +12,9 @@ A coin is rolled at the beginning of the game to determine who starts it. The ga
 ### Wireframes
 Included with the repository in the wireframes directory.
 
+### Getting Started
+Deployed on [Github Pages](https://gokepelemo.github.io/mancala). Simply enter the names of your players and start.
+
 ### Screenshots
 #### Animated
 <img src="/imgs/mancala-screencapture.gif" alt="Screen Capture" width="500" />
@@ -98,3 +101,7 @@ Included with the repository in the wireframes directory.
 8. Game play ends when all the pits on either side of the board excluding the home pits are empty.
 9. All the stones on the opponent's side are added to their home pit.
 10. The player with the highest number of stones in their home pit is declared the winner. 
+
+#### Next Steps
+- Refactoring
+- Remote opponent
