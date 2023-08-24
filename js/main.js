@@ -111,7 +111,7 @@ const playTurn = (position) => {
       dropPosition === gamePlay.player2.homePitPosition ? (dropPosition = 1) : dropPosition++;
       continue;
     }
-    if (dropPosition === 7 || dropPosition === 14) {
+    if (dropPosition === gamePlay.player1.homePitPosition || dropPosition === gamePlay.player2.homePitPosition) {
       homePitStones.add(dropPosition);
       stones--;
     } else {
@@ -329,7 +329,7 @@ const createPits = () => {
 // whenever the pit stone objects are updated, also update the DOM.
 const updatePit = (position) => {
   let strPosition = position.toString();
-  if (position === 7 || position === 14) {
+  if (position === gamePlay.player1.homePitPosition || position === gamePlay.player2.homePitPosition) {
     document.getElementById(strPosition).innerHTML = homePitStones[position];
   } else {
     document.getElementById(strPosition).innerHTML = "";
@@ -342,6 +342,7 @@ const updatePit = (position) => {
   delete strPosition;
 };
 
+// creates the play turn button
 const updatePlayerPane = () => {
   document.querySelectorAll(".play-turn-btn").forEach((item) => {
     item.remove();
@@ -468,10 +469,9 @@ const toggleStartDialog = () => {
       option.value = item;
       if (item === difficulty) option.selected = "true";
       option.innerHTML = item;
-
       dialogElements.difficulty.appendChild(option);
     });
-    // button
+    // start a new game button
     dialogElements.startButton = document.createElement("button");
     dialogElements.startButton.id = "new-game-button";
     dialogElements.startButton.innerText = "Start A New Game";
