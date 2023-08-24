@@ -74,14 +74,14 @@ const setPlayerParams = () => {
 // of the opposite player and the pit that they selected for the turn.
 const pitTainted = (position, init) => {
   let oppositePlayer = turn === "player1" ? "player2" : "player1";
-  if (init === true && (position === 7 || position === 14)) return true;
+  if (init === true && (position === gamePlay.player1.homePitPosition || position === gamePlay.player2.homePitPosition)) return true;
   if (position === gamePlay[oppositePlayer].homePitPosition) return true;
   delete oppositePlayer;
   return selectedPit ? position === selectedPit : false;
 };
 // add stones to the proper pits on game initialization
 const initialPitStones = () => {
-  for (let i = 1; i <= 14; i++) {
+  for (let i = 1; i <= gamePlay.player2.homePitPosition; i++) {
     // taint home pits. init parameter for current state
     if (pitTainted(i, true)) continue;
     for (let j = 0; j < difficulty; j++) {
@@ -108,7 +108,7 @@ const playTurn = (position) => {
   }
   while (stones > 0) {
     if (pitTainted(dropPosition)) {
-      dropPosition === 14 ? (dropPosition = 1) : dropPosition++;
+      dropPosition === gamePlay.player2.homePitPosition ? (dropPosition = 1) : dropPosition++;
       continue;
     }
     if (dropPosition === 7 || dropPosition === 14) {
@@ -118,7 +118,7 @@ const playTurn = (position) => {
       boardStones.add(dropPosition);
       stones--;
     }
-    dropPosition === 14 ? (dropPosition = 1) : dropPosition++;
+    dropPosition === gamePlay.player2.homePitPosition ? (dropPosition = 1) : dropPosition++;
   }
   setPlayerParams();
   dropPosition = checkState(dropPosition);
@@ -131,10 +131,10 @@ const playTurn = (position) => {
 const checkState = (position) => {
   // turn state -1 because the loop increments before testing for stones left
   // board ends at 14, so -1 of 1 is 14
-  let turnState = position === 1 ? 14 : position - 1;
+  let turnState = position === 1 ? gamePlay.player2.homePitPosition : position - 1;
   // console.log(`Last pit was ${turnState}`); // debug logging
   // if the last pit is a home pit, the current player plays again.
-  if (turnState === 7 || turnState === 14) {
+  if (turnState === gamePlay.player1.homePitPosition || turnState === gamePlay.player2.homePitPosition) {
     extraTurn = true;
     // if the last pit is empty and on the current player's side, all the opponent's stones
     // on the opposite pit are added to the current player's home pit.
@@ -161,10 +161,10 @@ const checkState = (position) => {
 const checkForWinner = () => {
   let pitCount = 0,
     stones = 0;
-  gamePlay.player1.boardPitPositions.forEach((item) => {
-    if (boardStones[item] === 0) pitCount++;
-  });
-  if (pitCount === 6) {
+  pitCount = gamePlay.player1.boardPitPositions.reduce((accumulator, item) => {
+    return accumulator = boardStones[item] === 0 ? accumulator + 1 : accumulator
+  },0);
+  if (pitCount === gamePlay.player1.boardPitPositions.length) {
     gamePlay.player2.boardPitPositions.forEach((item) => {
       if (gamePlay.player2.homePitPosition !== item) {
         stones += boardStones.collect(item);
@@ -172,25 +172,25 @@ const checkForWinner = () => {
       }
     });
     for (let i = 0; i < stones; i++) {
-      homePitStones.add(14);
+      homePitStones.add(gamePlay.player2.homePitPosition);
     }
   } else {
     pitCount = 0;
   }
-  gamePlay.player2.boardPitPositions.forEach((item) => {
-    if (boardStones[item] === 0) pitCount++;
-    if (pitCount === 6) {
-      gamePlay.player1.boardPitPositions.forEach((item) => {
-        if (gamePlay.player1.homePitPosition !== item) {
-          stones += boardStones.collect(item);
-          console.log(`Collected ${stones} to end the game. Position ${item}.`);
-        }
-      });
-      for (let i = 0; i < stones; i++) {
-        homePitStones.add(7);
+  pitCount = gamePlay.player2.boardPitPositions.reduce((accumulator, item) => {
+    return accumulator = boardStones[item] === 0 ? accumulator + 1 : accumulator
+  },0);
+  if (pitCount === gamePlay.player2.boardPitPositions.length) {
+    gamePlay.player1.boardPitPositions.forEach((item) => {
+      if (gamePlay.player1.homePitPosition !== item) {
+        stones += boardStones.collect(item);
+        console.log(`Collected ${stones} to end the game. Position ${item}.`);
       }
+    });
+    for (let i = 0; i < stones; i++) {
+      homePitStones.add(7);
     }
-  });
+  }
   setPlayerParams();
   if (stones > 0 || winner) {
     if (gamePlay.player1.homePit === gamePlay.player2.homePit) {
@@ -221,7 +221,7 @@ const resetPitSelect = (remove) => {
     return;
   }
   document.querySelectorAll(".board-pit").forEach((item) => {
-    item.style.border = "";
+    item.style.removeAttribute();
   });
   document.querySelectorAll(".play-turn-btn").forEach((item) => {
     item.remove();
@@ -358,7 +358,7 @@ const updatePlayerPane = () => {
 const playerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
   document.querySelectorAll(selector).forEach((item) => {
-    item.style.borderStyle = "dotted";
+    item.style.borderStyle = "dashed";
   });
 };
 // handle click across the entire game scene
