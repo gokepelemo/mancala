@@ -325,9 +325,13 @@ const pitSelect = (position) => {
   gamePlay[turn].pitSelected.innerHTML = `Pit ${position} Selected`;
   gamePlay[turn].stonesSelected.innerHTML = `${boardStones[position]}`;
   gamePlay[turn].boardPitPositions.indexOf(position) === -1
-    ? (playTurnBtn.disabled = true)
-    : (playTurnBtn.disabled = false);
-  playTurnBtn.dataset.pit = position;
+    ? playTurnBtn
+      ? (playTurnBtn.disabled = true)
+      : playTurnBtn
+    : playTurnBtn
+    ? (playTurnBtn.disabled = false)
+    : playTurnBtn;
+  playTurnBtn ? (playTurnBtn.dataset.pit = position) : playTurnBtn;
 };
 
 // add pits to the game board.
@@ -363,15 +367,25 @@ const updatePit = (position) => {
   ) {
     document.getElementById(strPosition).innerHTML = homePitStones[position];
   } else {
-    document.getElementById(strPosition).innerHTML = "";
-    for (let i = 0; i < boardStones[position]; i++) {
-      let newStone = document.createElement("div");
-      newStone.classList.add("stone");
-      document.getElementById(strPosition).appendChild(newStone);
-      setTimeout(function () {
-        newStone.style.height = `var(--stone-size)`;
-      }, 200);
+    let pitStones = document.getElementById(strPosition).childNodes;
+    if (pitStones) {
+      document.getElementById(strPosition).childNodes.forEach((item) => {
+        item.style.height = 0;
+        item.style.width = 0;
+      });
     }
+    setTimeout(function () {
+      document.getElementById(strPosition).innerHTML = "";
+      for (let i = 0; i < boardStones[position]; i++) {
+        let newStone = document.createElement("div");
+        newStone.classList.add("stone");
+        document.getElementById(strPosition).appendChild(newStone);
+        setTimeout(function () {
+          newStone.style.height = `var(--stone-size)`;
+          newStone.style.width = `var(--stone-size)`;
+        }, 200);
+      }
+    }, 500);    
   }
   delete strPosition;
 };
@@ -405,7 +419,7 @@ const createPlayerBtn = (type) => {
 // highlight the pits that the current player can select
 const currentPlayerPits = () => {
   let selector = turn === "player1" ? ".player1" : ".player2";
-  document.querySelectorAll(selector).forEach((item) => {
+  document.querySelectorAll(`.${turn}`).forEach((item) => {
     item.style.borderStyle = "dotted";
   });
 };
