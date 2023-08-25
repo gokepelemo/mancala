@@ -241,7 +241,7 @@ const checkForWinner = () => {
 // UX function: when we need to clear the board at the end of the game
 // reset pit boards, remove play buttons, and generate a play again link.
 // adding a remove parameter removes the play again link.
-const resetPitSelect = (remove) => {
+const togglePlayAgain = (remove) => {
   if (remove === true) {
     document.querySelector("#play-again").remove();
     document.querySelectorAll(".player-info").forEach((item) => {
@@ -280,7 +280,7 @@ const gameOver = () => {
         createMessage(`${gamePlay[gameState].name} Wins!`);
         break;
     }
-    resetPitSelect();
+    togglePlayAgain();
   } else {
     return false;
   }
@@ -434,7 +434,7 @@ const handleClick = (e) => {
     if (winner != "") return;
     playTurn(e.target.dataset.pit);
   } else if (e.target.id === "play-again") {
-    resetPitSelect(true);
+    togglePlayAgain(true);
     init();
   } else if (e.target.id === "new-game-button") {
     gamePlay.player1.name = document.getElementById("player1NameInput").value;
@@ -594,7 +594,9 @@ const toggleStartDialog = () => {
 };
 
 const handleInput = (e) => {
-  if (e.target.tagName === "INPUT") {
+  console.log(e)
+  // UX function: handle input functionality for start dialog
+  if (e.target.tagName === "INPUT" && e.target.parentNode.id === "start-dialog") {
     e.type === "click" && (e.target.value === "Player 1" || e.target.value === "Player 2") ? e.target.value = "" : e.target.value
     e.type === "focusout" && (e.target.value === "" || e.target.value === "") ? (e.target.value = e.target.id === "player1NameInput" ? "Player 1" : "Player 2") : e.target.value
   }
