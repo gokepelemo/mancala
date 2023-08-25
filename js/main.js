@@ -592,9 +592,8 @@ const toggleStartDialog = () => {
     delete dialogElements;
   }
 };
-
+// handle text inputs
 const handleInput = (e) => {
-  console.log(e)
   // UX function: handle input functionality for start dialog
   if (e.target.tagName === "INPUT" && e.target.parentNode.id === "start-dialog") {
     e.type === "click" && (e.target.value === "Player 1" || e.target.value === "Player 2") ? e.target.value = "" : e.target.value
