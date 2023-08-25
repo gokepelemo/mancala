@@ -265,6 +265,7 @@ const togglePlayAgain = (remove) => {
   playAgainBtn.classList.add("play-again");
   playAgainBtn.id = "play-again";
   playerPane.appendChild(playAgainBtn);
+  playAgainBtn.tabindex = 0;
   playAgainBtn.addEventListener("click", handleClick);
 };
 
@@ -384,7 +385,7 @@ const updatePit = (position) => {
           newStone.style.width = `var(--stone-size)`;
         }, 200);
       }
-    }, 500);    
+    }, 500);
   }
   delete strPosition;
 };
@@ -546,13 +547,13 @@ const toggleStartDialog = () => {
     dialogElements.player1Name = document.createElement("input");
     dialogElements.player1Name.value = "Player 1";
     dialogElements.player1Name.id = "player1NameInput";
-    dialogElements.player1Name.addEventListener("click", handleInput)
-    dialogElements.player1Name.addEventListener("focusout", handleInput)
+    dialogElements.player1Name.addEventListener("click", handleInput);
+    dialogElements.player1Name.addEventListener("focusout", handleInput);
     dialogElements.player2Name = document.createElement("input");
     dialogElements.player2Name.value = "Player 2";
     dialogElements.player2Name.id = "player2NameInput";
-    dialogElements.player2Name.addEventListener("click", handleInput)
-    dialogElements.player2Name.addEventListener("focusout", handleInput)
+    dialogElements.player2Name.addEventListener("click", handleInput);
+    dialogElements.player2Name.addEventListener("focusout", handleInput);
     //difficulty select
     dialogElements.difficultyLabel = document.createElement("label");
     dialogElements.difficultyLabel.for = "difficulty";
@@ -565,9 +566,9 @@ const toggleStartDialog = () => {
     dialogElements.difficultyOptions.forEach((item) => {
       let option = document.createElement("option");
       option.value = item;
-      if (item === difficulty) option.setAttribute("selected", true)
+      if (item === difficulty) option.setAttribute("selected", true);
       option.innerHTML = item;
-      dialogElements.difficulty.appendChild(option);
+      dialogElements.difficulty.add(option);
     });
     // start a new game button
     dialogElements.startButton = document.createElement("button");
@@ -595,11 +596,20 @@ const toggleStartDialog = () => {
 // handle text inputs
 const handleInput = (e) => {
   // UX function: handle input functionality for start dialog
-  if (e.target.tagName === "INPUT" && e.target.parentNode.id === "start-dialog") {
-    e.type === "click" && (e.target.value === "Player 1" || e.target.value === "Player 2") ? e.target.value = "" : e.target.value
-    e.type === "focusout" && (e.target.value === "" || e.target.value === "") ? (e.target.value = e.target.id === "player1NameInput" ? "Player 1" : "Player 2") : e.target.value
+  if (
+    e.target.tagName === "INPUT" &&
+    e.target.parentNode.id === "start-dialog"
+  ) {
+    e.type === "click" &&
+    (e.target.value === "Player 1" || e.target.value === "Player 2")
+      ? (e.target.value = "")
+      : e.target.value;
+    e.type === "focusout" && (e.target.value === "" || e.target.value === "")
+      ? (e.target.value =
+          e.target.id === "player1NameInput" ? "Player 1" : "Player 2")
+      : e.target.value;
   }
-}
+};
 
 const init = () => {
   gamePlay = new GameScene();
