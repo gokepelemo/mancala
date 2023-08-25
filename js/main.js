@@ -294,7 +294,7 @@ const createMessage = (msg, position) => {
 
 // toggle pit selection.
 const togglePit = (position, reset) => {
-  if (winner) return;
+  if (winner != "") return;
   document.querySelectorAll(".board-pit").forEach((item) => {
     item.style.border = "";
     currentPlayerPits();
@@ -305,7 +305,7 @@ const togglePit = (position, reset) => {
 
 // switch turns unless they landed on a home pit on their last turn.
 const switchTurn = () => {
-  if (winner) return;
+  if (winner != "") return;
   if (extraTurn === true) {
     createMessage(`Landed on your home pit. You get an extra turn.`);
     extraTurn = false;
@@ -428,11 +428,11 @@ const currentPlayerPits = () => {
 const handleClick = (e) => {
   let numPosition = Number(e.target.id);
   if (e.target.classList.contains("board-pit")) {
-    if (winner) return;
+    if (winner != "") return;
     togglePit(numPosition);
     pitSelect(numPosition);
   } else if (e.target.id === "play-turn-btn") {
-    if (winner) return;
+    if (winner != "") return;
     playTurn(e.target.dataset.pit);
   } else if (e.target.id === "play-again") {
     resetPitSelect(true);
@@ -527,6 +527,8 @@ const renderBoard = () => {
     },
   };
   turnCount = -1;
+  selectedPit = "";
+  winner = "";
   setPlayerParams();
   toggleStartDialog();
 };
