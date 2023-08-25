@@ -2,7 +2,6 @@
 const boardConfig = {
   // pits per player
   boardPits: 6,
-  homePits: 1,
 };
 
 /****** state variables ******/
@@ -242,7 +241,7 @@ const checkForWinner = () => {
 // UX function: when we need to clear the board at the end of the game
 // reset pit boards, remove play buttons, and generate a play again link.
 // adding a remove parameter removes the play again link.
-const resetPitSelect = (remove) => {
+const togglePlayAgain = (remove) => {
   if (remove === true) {
     document.querySelector("#play-again").remove();
     document.querySelectorAll(".player-info").forEach((item) => {
@@ -281,7 +280,7 @@ const gameOver = () => {
         createMessage(`${gamePlay[gameState].name} Wins!`);
         break;
     }
-    resetPitSelect();
+    togglePlayAgain();
   } else {
     return false;
   }
@@ -435,7 +434,7 @@ const handleClick = (e) => {
     if (winner != "") return;
     playTurn(e.target.dataset.pit);
   } else if (e.target.id === "play-again") {
-    resetPitSelect(true);
+    togglePlayAgain(true);
     init();
   } else if (e.target.id === "new-game-button") {
     gamePlay.player1.name = document.getElementById("player1NameInput").value;
@@ -547,9 +546,13 @@ const toggleStartDialog = () => {
     dialogElements.player1Name = document.createElement("input");
     dialogElements.player1Name.value = "Player 1";
     dialogElements.player1Name.id = "player1NameInput";
+    dialogElements.player1Name.addEventListener("click", handleInput)
+    dialogElements.player1Name.addEventListener("focusout", handleInput)
     dialogElements.player2Name = document.createElement("input");
     dialogElements.player2Name.value = "Player 2";
     dialogElements.player2Name.id = "player2NameInput";
+    dialogElements.player2Name.addEventListener("click", handleInput)
+    dialogElements.player2Name.addEventListener("focusout", handleInput)
     //difficulty select
     dialogElements.difficultyLabel = document.createElement("label");
     dialogElements.difficultyLabel.for = "difficulty";
@@ -562,7 +565,7 @@ const toggleStartDialog = () => {
     dialogElements.difficultyOptions.forEach((item) => {
       let option = document.createElement("option");
       option.value = item;
-      if (item === difficulty) option.selected = "true";
+      if (item === difficulty) option.setAttribute("selected", true)
       option.innerHTML = item;
       dialogElements.difficulty.appendChild(option);
     });
@@ -589,6 +592,14 @@ const toggleStartDialog = () => {
     delete dialogElements;
   }
 };
+// handle text inputs
+const handleInput = (e) => {
+  // UX function: handle input functionality for start dialog
+  if (e.target.tagName === "INPUT" && e.target.parentNode.id === "start-dialog") {
+    e.type === "click" && (e.target.value === "Player 1" || e.target.value === "Player 2") ? e.target.value = "" : e.target.value
+    e.type === "focusout" && (e.target.value === "" || e.target.value === "") ? (e.target.value = e.target.id === "player1NameInput" ? "Player 1" : "Player 2") : e.target.value
+  }
+}
 
 const init = () => {
   gamePlay = new GameScene();
