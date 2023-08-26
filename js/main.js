@@ -245,19 +245,11 @@ const checkForWinner = () => {
 // reset pit boards, remove play buttons, and generate a play again link.
 // adding a remove parameter removes the play again link.
 const togglePlayAgain = (remove) => {
-<<<<<<< HEAD
-  if (remove === true) {
-    document.querySelector("#play-again").remove();
-    document.querySelectorAll(".player-info").forEach((item) => {
-      item.removeAttribute("style");
-      item.classList.add("pane-resize");
-=======
   if (remove === `remove`) {
     document.querySelector(`#play-again`).remove();
     document.querySelectorAll(`.player-info`).forEach((item) => {
       item.removeAttribute(`style`);
       item.classList.add(`pane-resize`);
->>>>>>> mancala-dev
     });
     return;
   }
@@ -444,19 +436,11 @@ const handleClick = (e) => {
     if (winner) return;
     togglePit(numPosition);
     pitSelect(numPosition);
-<<<<<<< HEAD
-  } else if (e.target.id === "play-turn-btn") {
-    if (winner != "") return;
-    playTurn(e.target.dataset.pit);
-  } else if (e.target.id === "play-again") {
-    togglePlayAgain(true);
-=======
   } else if (e.target.id === `play-turn-btn`) {
     if (winner) return;
     playTurn(Number(e.target.dataset.pit));
   } else if (e.target.id === `play-again`) {
     togglePlayAgain(`remove`);
->>>>>>> mancala-dev
     init();
   } else if (e.target.id === `new-game-button`) {
     gamePlay.player1.name = document.getElementById(`player1NameInput`).value;
@@ -568,18 +552,6 @@ const toggleStartDialog = (remove) => {
     dialogElements.container.classList.add(`start-dialog`);
     dialogElements.container.setAttribute(`id`, `start-dialog`);
     // name inputs
-<<<<<<< HEAD
-    dialogElements.player1Name = document.createElement("input");
-    dialogElements.player1Name.value = "Player 1";
-    dialogElements.player1Name.id = "player1NameInput";
-    dialogElements.player1Name.addEventListener("click", handleInput)
-    dialogElements.player1Name.addEventListener("focusout", handleInput)
-    dialogElements.player2Name = document.createElement("input");
-    dialogElements.player2Name.value = "Player 2";
-    dialogElements.player2Name.id = "player2NameInput";
-    dialogElements.player2Name.addEventListener("click", handleInput)
-    dialogElements.player2Name.addEventListener("focusout", handleInput)
-=======
     Object.keys(gamePlay.players).forEach((player) => {
       dialogElements[`${player}Name`] = document.createElement(`INPUT`);
       dialogElements[`${player}Name`].setAttribute(
@@ -590,7 +562,6 @@ const toggleStartDialog = (remove) => {
       dialogElements[`${player}Name`].addEventListener(`click`, handleInput);
       dialogElements[`${player}Name`].addEventListener(`focusout`, handleInput);
     });
->>>>>>> mancala-dev
     //difficulty select
     dialogElements.difficultyLabel = document.createElement(`LABEL`);
     dialogElements.difficultyLabel.for = `difficulty`;
@@ -601,15 +572,9 @@ const toggleStartDialog = (remove) => {
     dialogElements.difficulty.name = `difficulty`;
     dialogElements.difficultyOptions = [3, 4, 5, 6, 7, 8, 9, 10];
     dialogElements.difficultyOptions.forEach((item) => {
-<<<<<<< HEAD
-      let option = document.createElement("option");
-      option.value = item;
-      if (item === difficulty) option.setAttribute("selected", true)
-=======
       let option = document.createElement(`OPTION`);
       option.setAttribute(`value`, item);
       if (Object.is(item, difficulty)) option.setAttribute(`selected`, ``);
->>>>>>> mancala-dev
       option.innerHTML = item;
       dialogElements.difficulty.add(option);
     });
@@ -639,13 +604,6 @@ const toggleStartDialog = (remove) => {
 // handle text inputs
 const handleInput = (e) => {
   // UX function: handle input functionality for start dialog
-<<<<<<< HEAD
-  if (e.target.tagName === "INPUT" && e.target.parentNode.id === "start-dialog") {
-    e.type === "click" && (e.target.value === "Player 1" || e.target.value === "Player 2") ? e.target.value = "" : e.target.value
-    e.type === "focusout" && (e.target.value === "" || e.target.value === "") ? (e.target.value = e.target.id === "player1NameInput" ? "Player 1" : "Player 2") : e.target.value
-  }
-}
-=======
   if (
     e.target.tagName === `INPUT` &&
     e.target.parentNode.id === `start-dialog`
@@ -660,7 +618,6 @@ const handleInput = (e) => {
       : e.target.value;
   }
 };
->>>>>>> mancala-dev
 
 const init = () => {
   gamePlay = new GameScene();
