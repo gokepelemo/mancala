@@ -196,6 +196,7 @@ const checkForWinner = () => {
     return (accumulator =
       boardStones[item] === 0 ? accumulator + 1 : accumulator);
   }, 0);
+  console.log(`${pitCount} pits empty for player 1`)
   if (pitCount === gamePlay.player1.boardPitPositions.length) {
     gamePlay.player2.boardPitPositions.forEach((item) => {
       if (gamePlay.player2.homePitPosition !== item) {
@@ -213,6 +214,7 @@ const checkForWinner = () => {
     return (accumulator =
       boardStones[item] === 0 ? accumulator + 1 : accumulator);
   }, 0);
+  console.log(`${pitCount} pits empty for player 2`)
   if (pitCount === gamePlay.player2.boardPitPositions.length) {
     gamePlay.player1.boardPitPositions.forEach((item) => {
       if (gamePlay.player1.homePitPosition !== item) {
@@ -323,7 +325,7 @@ const switchTurn = () => {
 
 // handle player selecting a pit.
 const pitSelect = (position) => {
-  let playTurnBtn = document.querySelector(`#play-turn-btn`);
+  playTurnBtn = document.querySelector(`#play-turn-btn`);
   gamePlay[turn].pitSelected.innerHTML = `Pit ${position} Selected`;
   gamePlay[turn].stonesSelected.innerHTML = `${boardStones[position]}`;
   gamePlay[turn].boardPitPositions.indexOf(position) === -1
@@ -339,7 +341,7 @@ const pitSelect = (position) => {
 // add pits to the game board.
 const createPits = () => {
   clearCurrentPits();
-  [`player2`, `player1`].forEach((player) => {
+  Object.keys(gamePlay.players).reverse().forEach((player) => {
     let boardPitPos =
       player === `player2`
         ? gamePlay[player].boardPitPositions.reverse()
@@ -353,7 +355,7 @@ const createPits = () => {
     });
     let homePit = document.createElement(`DIV`);
     homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
-    homePit.classList.add(`home-pits`, player);
+    homePit.classList.add(`home-pits`, `${player}-home-pit`);
     homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
     homePit.innerText = 0;
     document.querySelector(`#game-board`).appendChild(homePit);
@@ -438,7 +440,7 @@ const handleClick = (e) => {
     if (winner) return;
     playTurn(e.target.dataset.pit);
   } else if (e.target.id === `play-again`) {
-    togglePlayAgain(remove);
+    togglePlayAgain(`remove`);
     init();
   } else if (e.target.id === `new-game-button`) {
     gamePlay.player1.name = document.getElementById(`player1NameInput`).value;
@@ -488,6 +490,11 @@ const handleClick = (e) => {
 const clearCurrentPits = () => {
   if (document.querySelector(`.board-pit`)) {
     document.querySelectorAll(`.board-pit`).forEach((item) => {
+      item.remove();
+    });
+  }
+  if (document.querySelector(`.home-pits`)) {
+    document.querySelectorAll(`.home-pits`).forEach((item) => {
       item.remove();
     });
   }
@@ -570,7 +577,7 @@ const toggleStartDialog = (remove) => {
     dialogElements.difficultyOptions.forEach((item) => {
       let option = document.createElement(`OPTION`);
       option.setAttribute(`value`, item);
-      if (Object.is(item, difficulty)) option.setAttribute(`selected`, true);
+      if (Object.is(item, difficulty)) option.setAttribute(`selected`, ``);
       option.innerHTML = item;
       dialogElements.difficulty.add(option);
     });
@@ -617,7 +624,7 @@ const handleInput = (e) => {
 
 const init = () => {
   gamePlay = new GameScene();
-  renderBoard(gamePlay);
+  renderBoard();
   renderPlayerPane();
 };
 
