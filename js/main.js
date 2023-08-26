@@ -196,7 +196,6 @@ const checkForWinner = () => {
     return (accumulator =
       boardStones[item] === 0 ? accumulator + 1 : accumulator);
   }, 0);
-  console.log(`${pitCount} pits empty for player 1`)
   if (pitCount === gamePlay.player1.boardPitPositions.length) {
     gamePlay.player2.boardPitPositions.forEach((item) => {
       if (gamePlay.player2.homePitPosition !== item) {
@@ -214,7 +213,6 @@ const checkForWinner = () => {
     return (accumulator =
       boardStones[item] === 0 ? accumulator + 1 : accumulator);
   }, 0);
-  console.log(`${pitCount} pits empty for player 2`)
   if (pitCount === gamePlay.player2.boardPitPositions.length) {
     gamePlay.player1.boardPitPositions.forEach((item) => {
       if (gamePlay.player1.homePitPosition !== item) {
@@ -341,25 +339,27 @@ const pitSelect = (position) => {
 // add pits to the game board.
 const createPits = () => {
   clearCurrentPits();
-  Object.keys(gamePlay.players).reverse().forEach((player) => {
-    let boardPitPos =
-      player === `player2`
-        ? gamePlay[player].boardPitPositions.reverse()
-        : gamePlay[player].boardPitPositions;
-    boardPitPos.forEach((item) => {
-      let pit = document.createElement(`DIV`);
-      pit.classList.add(`board-pit`, player);
-      pit.setAttribute(`tabindex`, item);
-      pit.setAttribute(`id`, item);
-      document.querySelector(`#board-${player}`).appendChild(pit);
+  Object.keys(gamePlay.players)
+    .reverse()
+    .forEach((player) => {
+      let boardPitPos =
+        player === `player2`
+          ? gamePlay[player].boardPitPositions.reverse()
+          : gamePlay[player].boardPitPositions;
+      boardPitPos.forEach((item) => {
+        let pit = document.createElement(`DIV`);
+        pit.classList.add(`board-pit`, player);
+        pit.setAttribute(`tabindex`, item);
+        pit.setAttribute(`id`, item);
+        document.querySelector(`#board-${player}`).appendChild(pit);
+      });
+      let homePit = document.createElement(`DIV`);
+      homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
+      homePit.classList.add(`home-pits`, `${player}-home-pit`);
+      homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
+      homePit.innerText = 0;
+      document.querySelector(`#game-board`).appendChild(homePit);
     });
-    let homePit = document.createElement(`DIV`);
-    homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
-    homePit.classList.add(`home-pits`, `${player}-home-pit`);
-    homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
-    homePit.innerText = 0;
-    document.querySelector(`#game-board`).appendChild(homePit);
-  });
 };
 
 // whenever the pit stone objects are updated, also update the DOM.
