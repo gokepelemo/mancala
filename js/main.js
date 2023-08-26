@@ -109,13 +109,12 @@ const initialPitStones = () => {
 const playTurn = (position) => {
   // collect stones from a selected pit and distribute to all pits except the tainted
   // pits, return the id of the last pit we drop on.
-  position = Number(position);
   selectedPit = position;
   let dropPosition,
     stones = boardStones.collect(position);
   // dropPosition + 1 because we're dropping on the next pit.
   // board ends at 14 so 14 + 1 is 1.
-  position === 14 ? (dropPosition = 1) : (dropPosition = position + 1);
+  position === gamePlay.player2.homePitPosition ? (dropPosition = 1) : (dropPosition = position + 1);
   if (stones === 0) {
     createMessage(`That pit has no stones. Select another.`);
     return;
@@ -437,7 +436,7 @@ const handleClick = (e) => {
     pitSelect(numPosition);
   } else if (e.target.id === `play-turn-btn`) {
     if (winner) return;
-    playTurn(e.target.dataset.pit);
+    playTurn(Number(e.target.dataset.pit));
   } else if (e.target.id === `play-again`) {
     togglePlayAgain(`remove`);
     init();
