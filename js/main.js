@@ -221,7 +221,7 @@ const checkForWinner = () => {
       }
     });
     for (let i = 0; i < stones; i++) {
-      homePitStones.add(7);
+      homePitStones.add(gamePlay.player1.homePitPosition);
     }
   }
   setPlayerParams();
