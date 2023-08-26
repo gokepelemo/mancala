@@ -612,7 +612,7 @@ const handleInput = (e) => {
     (e.target.value === `Player 1` || e.target.value === `Player 2`)
       ? (e.target.value = ``)
       : e.target.value;
-    e.type === `focusout` && (e.target.value === `` || e.target.value === ``)
+    e.type === `focusout` && e.target.value === ``
       ? (e.target.value =
           e.target.id === `player1NameInput` ? `Player 1` : `Player 2`)
       : e.target.value;
