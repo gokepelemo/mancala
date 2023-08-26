@@ -7,14 +7,13 @@ const boardConfig = {
 /****** state variables ******/
 let homePitStones,
   boardStones,
-  turn = `player1`,
+  turn,
   turnCount,
   selectedPit,
   winner,
   gamePlay,
   extraTurn,
-  // default difficulty level
-  difficulty = 6;
+  difficulty;
 
 /****** cached DOM elements ******/
 const infoPane = document.querySelector(`#info-pane`);
@@ -348,14 +347,14 @@ const createPits = () => {
           : gamePlay[player].boardPitPositions;
       boardPitPos.forEach((item) => {
         let pit = document.createElement(`DIV`);
-        pit.classList.add(`board-pit`, player);
+        pit.classList.add(`board-pit`, player, `pit`);
         pit.setAttribute(`tabindex`, item);
         pit.setAttribute(`id`, item);
         document.querySelector(`#board-${player}`).appendChild(pit);
       });
       let homePit = document.createElement(`DIV`);
       homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
-      homePit.classList.add(`home-pits`, `${player}-home-pit`);
+      homePit.classList.add(`home-pits`, `${player}-home-pit`, `pit`);
       homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
       homePit.innerText = 0;
       document.querySelector(`#game-board`).appendChild(homePit);
@@ -488,13 +487,8 @@ const handleClick = (e) => {
 
 // clear the current pits if any exists
 const clearCurrentPits = () => {
-  if (document.querySelector(`.board-pit`)) {
-    document.querySelectorAll(`.board-pit`).forEach((item) => {
-      item.remove();
-    });
-  }
-  if (document.querySelector(`.home-pits`)) {
-    document.querySelectorAll(`.home-pits`).forEach((item) => {
+  if (document.querySelector(`.pit`)) {
+    document.querySelectorAll(`.pit`).forEach((item) => {
       item.remove();
     });
   }
@@ -536,9 +530,11 @@ const renderBoard = () => {
   };
   createPits();
   createPitStones();
-  turnCount = -1;
-  selectedPit = ``;
-  winner = ``;
+  (turnCount = -1),
+    (selectedPit = ``),
+    (winner = ``),
+    (difficulty = 6),
+    (turn = `player1`);
   setPlayerParams();
   toggleStartDialog();
 };
