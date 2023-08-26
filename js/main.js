@@ -348,9 +348,9 @@ const createPits = () => {
       document.querySelector(`#board-${player}`).appendChild(pit);
     });
     let homePit = document.createElement(`DIV`);
+    homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
     homePit.classList.add(`home-pits`, player);
     homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
-    homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
     homePit.innerText = 0;
     document.querySelector(`#game-board`).appendChild(homePit);
   });
