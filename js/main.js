@@ -30,7 +30,7 @@ class GameScene {
       homePit: 0,
       homePitPosition: 7,
       coinSideTossed: ``,
-      playerPane: document.querySelector(`#player-1-pane`),
+      playerPane: document.querySelector(`#player-pane-1`),
       pitSelected: document.querySelector(`#pit-info-1`),
       stonesSelected: document.querySelector(`#stone-count-1`),
       boardPitPositions: [1, 2, 3, 4, 5, 6],
@@ -40,7 +40,7 @@ class GameScene {
         homePit: 0,
         coinSideTossed: ``,
         homePitPosition: 14,
-        playerPane: document.querySelector(`#player-2-pane`),
+        playerPane: document.querySelector(`#player-pane-2`),
         pitSelected: document.querySelector(`#pit-info-2`),
         stonesSelected: document.querySelector(`#stone-count-2`),
         boardPitPositions: [8, 9, 10, 11, 12, 13],
@@ -536,8 +536,8 @@ const renderBoard = (scene) => {
 const toggleStartDialog = (remove) => {
   if (document.getElementById(`start-dialog`) && remove === `remove`) {
     document.getElementById(`start-dialog`).remove();
-    document.querySelector(`#player-1-pane`).removeAttribute(`style`);
-    document.querySelector(`#player-2-pane`).removeAttribute(`style`);
+    document.querySelector(`#player-pane-1`).removeAttribute(`style`);
+    document.querySelector(`#player-pane-2`).removeAttribute(`style`);
   } else {
     let dialogElements = {};
     dialogElements.container = document.createElement(`DIV`);
@@ -585,8 +585,8 @@ const toggleStartDialog = (remove) => {
     dialogElements.container.appendChild(dialogElements.difficultyLabel);
     dialogElements.container.appendChild(dialogElements.difficulty);
     dialogElements.container.appendChild(dialogElements.startButton);
-    document.querySelector(`#player-1-pane`).style.display = `none`;
-    document.querySelector(`#player-2-pane`).style.display = `none`;
+    document.querySelector(`#player-pane-1`).style.display = `none`;
+    document.querySelector(`#player-pane-2`).style.display = `none`;
     playerPane.appendChild(dialogElements.container);
     newGameBtn = document.querySelector(`#new-game-button`);
     newGameBtn.addEventListener(`click`, handleClick);
