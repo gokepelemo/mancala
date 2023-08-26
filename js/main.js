@@ -25,26 +25,30 @@ let playTurnBtn, playAgainBtn, coinTossBtn, newGameBtn;
 /****** classes ******/
 class GameScene {
   constructor() {
-    (this.player1 = {
-      name: `Player 1`,
-      homePit: 0,
-      homePitPosition: 7,
-      coinSideTossed: ``,
-      playerPane: document.querySelector(`#player-pane-1`),
-      pitSelected: document.querySelector(`#pit-info-1`),
-      stonesSelected: document.querySelector(`#stone-count-1`),
-      boardPitPositions: [1, 2, 3, 4, 5, 6],
-    }),
-      (this.player2 = {
+    this.players = {
+      player1: {
+        name: `Player 1`,
+        homePit: 0,
+        homePitPosition: 7,
+        coinSideTossed: ``,
+        playerPane: document.querySelector(`#player1-pane`),
+        pitSelected: document.querySelector(`#player1-pit-info`),
+        stonesSelected: document.querySelector(`#player1-stone-count`),
+        boardPitPositions: [1, 2, 3, 4, 5, 6],
+      },
+      player2: {
         name: `Player 2`,
         homePit: 0,
         coinSideTossed: ``,
         homePitPosition: 14,
-        playerPane: document.querySelector(`#player-pane-2`),
-        pitSelected: document.querySelector(`#pit-info-2`),
-        stonesSelected: document.querySelector(`#stone-count-2`),
+        playerPane: document.querySelector(`#player2-pane`),
+        pitSelected: document.querySelector(`#player2-pit-info`),
+        stonesSelected: document.querySelector(`#player2-stone-count`),
         boardPitPositions: [8, 9, 10, 11, 12, 13],
-      });
+      },
+    };
+    this.player1 = this.players.player1;
+    this.player2 = this.players.player2;
     // utility function: if we get an opposing side parameter, we return the
     // opposing side. if not, we return the player who owns the position
     this.boardPosition = function (position, oppositeSide) {
@@ -65,7 +69,7 @@ const coinToss = () => {
 
 const setPlayerParams = () => {
   // set the player params after each DOM update.
-  [`player1`, `player2`].forEach((item) => {
+  Object.keys(gamePlay.players).forEach((item) => {
     gamePlay[item].homePit = homePitStones[gamePlay[item].homePitPosition];
     document.getElementById(gamePlay[item].homePitPosition).innerHTML =
       homePitStones[gamePlay[item].homePitPosition];
@@ -493,16 +497,16 @@ const renderPlayerPane = () => {
   createPlayerBtn(`toss`);
 };
 
-const createPitStones = (scene) => {
-  [`player1`, `player2`].forEach((item) => {
-    scene[item].boardPitPositions.forEach((position) => {
+const createPitStones = () => {
+  Object.keys(gamePlay.players).forEach((item) => {
+    gamePlay[item].boardPitPositions.forEach((position) => {
       boardStones[position] = 0;
     });
-    homePitStones[scene[item].homePitPosition] = 0;
+    homePitStones[gamePlay[item].homePitPosition] = 0;
   });
 };
 
-const renderBoard = (scene) => {
+const renderBoard = () => {
   boardStones = {
     add: function (position) {
       this[position] = this[position] + 1;
@@ -524,7 +528,7 @@ const renderBoard = (scene) => {
     },
   };
   createPits();
-  createPitStones(scene);
+  createPitStones();
   turnCount = -1;
   selectedPit = ``;
   winner = ``;
@@ -536,24 +540,24 @@ const renderBoard = (scene) => {
 const toggleStartDialog = (remove) => {
   if (document.getElementById(`start-dialog`) && remove === `remove`) {
     document.getElementById(`start-dialog`).remove();
-    document.querySelector(`#player-pane-1`).removeAttribute(`style`);
-    document.querySelector(`#player-pane-2`).removeAttribute(`style`);
+    document.querySelector(`#player1-pane`).removeAttribute(`style`);
+    document.querySelector(`#player2-pane`).removeAttribute(`style`);
   } else {
     let dialogElements = {};
     dialogElements.container = document.createElement(`DIV`);
     dialogElements.container.classList.add(`start-dialog`);
     dialogElements.container.setAttribute(`id`, `start-dialog`);
     // name inputs
-    dialogElements.player1Name = document.createElement(`INPUT`);
-    dialogElements.player1Name.setAttribute(`value`, `Player 1`);
-    dialogElements.player1Name.setAttribute(`id`, `player1NameInput`);
-    dialogElements.player1Name.addEventListener(`click`, handleInput);
-    dialogElements.player1Name.addEventListener(`focusout`, handleInput);
-    dialogElements.player2Name = document.createElement(`INPUT`);
-    dialogElements.player2Name.setAttribute(`value`, `Player 2`);
-    dialogElements.player2Name.setAttribute(`id`, `player2NameInput`);
-    dialogElements.player2Name.addEventListener(`click`, handleInput);
-    dialogElements.player2Name.addEventListener(`focusout`, handleInput);
+    Object.keys(gamePlay.players).forEach((player) => {
+      dialogElements[`${player}Name`] = document.createElement(`INPUT`);
+      dialogElements[`${player}Name`].setAttribute(
+        `value`,
+        gamePlay[player].name
+      );
+      dialogElements[`${player}Name`].setAttribute(`id`, `${player}NameInput`);
+      dialogElements[`${player}Name`].addEventListener(`click`, handleInput);
+      dialogElements[`${player}Name`].addEventListener(`focusout`, handleInput);
+    });
     //difficulty select
     dialogElements.difficultyLabel = document.createElement(`LABEL`);
     dialogElements.difficultyLabel.for = `difficulty`;
@@ -585,8 +589,8 @@ const toggleStartDialog = (remove) => {
     dialogElements.container.appendChild(dialogElements.difficultyLabel);
     dialogElements.container.appendChild(dialogElements.difficulty);
     dialogElements.container.appendChild(dialogElements.startButton);
-    document.querySelector(`#player-pane-1`).style.display = `none`;
-    document.querySelector(`#player-pane-2`).style.display = `none`;
+    document.querySelector(`#player1-pane`).style.display = `none`;
+    document.querySelector(`#player2-pane`).style.display = `none`;
     playerPane.appendChild(dialogElements.container);
     newGameBtn = document.querySelector(`#new-game-button`);
     newGameBtn.addEventListener(`click`, handleClick);
