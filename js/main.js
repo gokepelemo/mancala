@@ -67,9 +67,8 @@ const setPlayerParams = () => {
   // set the player params after each DOM update.
   [`player1`, `player2`].forEach((item) => {
     gamePlay[item].homePit = homePitStones[gamePlay[item].homePitPosition];
-    document.getElementById(
-      gamePlay[item].homePitPosition.toString()
-    ).innerHTML = homePitStones[gamePlay[item].homePitPosition];
+    document.getElementById(gamePlay[item].homePitPosition).innerHTML =
+      homePitStones[gamePlay[item].homePitPosition];
     gamePlay[item].stonesSelected.innerHTML = gamePlay[item].homePit;
     gamePlay[item].playerPane.children[0].innerHTML = gamePlay[item].name;
     gamePlay[item].pitSelected.innerHTML = `Home Pit`;
@@ -242,39 +241,38 @@ const checkForWinner = () => {
 // reset pit boards, remove play buttons, and generate a play again link.
 // adding a remove parameter removes the play again link.
 const togglePlayAgain = (remove) => {
-  if (remove === true) {
-    document.querySelector("#play-again").remove();
-    document.querySelectorAll(".player-info").forEach((item) => {
-      item.removeAttribute("style");
-      item.classList.add("pane-resize");
+  if (remove === `remove`) {
+    document.querySelector(`#play-again`).remove();
+    document.querySelectorAll(`.player-info`).forEach((item) => {
+      item.removeAttribute(`style`);
+      item.classList.add(`pane-resize`);
     });
     return;
   }
-  document.querySelectorAll(".board-pit").forEach((item) => {
-    item.removeAttribute("style");
+  document.querySelectorAll(`.board-pit`).forEach((item) => {
+    item.removeAttribute(`style`);
   });
-  document.querySelectorAll(".play-turn-btn").forEach((item) => {
+  document.querySelectorAll(`.play-turn-btn`).forEach((item) => {
     item.remove();
   });
-  document.querySelectorAll(".player-info").forEach((item) => {
-    item.style.height = "20vmin";
-    item.classList.remove("pane-resize");
+  document.querySelectorAll(`.player-info`).forEach((item) => {
+    item.style.height = `20vmin`;
+    item.classList.remove(`pane-resize`);
   });
-  playAgainBtn = document.createElement("div");
-  playAgainBtn.innerHTML = "Play Again?";
-  playAgainBtn.classList.add("play-again");
-  playAgainBtn.id = "play-again";
+  playAgainBtn = document.createElement(`DIV`);
+  playAgainBtn.innerHTML = `Play Again?`;
+  playAgainBtn.classList.add(`play-again`);
+  playAgainBtn.id = `play-again`;
   playerPane.appendChild(playAgainBtn);
-  playAgainBtn.tabindex = 0;
-  playAgainBtn.addEventListener("click", handleClick);
+  playAgainBtn.setAttribute(`tabindex`, 0);
+  playAgainBtn.addEventListener(`click`, handleClick);
 };
 
 const gameOver = () => {
   let gameState = checkForWinner();
-  // console.log(gameState);
-  if (gameState != false) {
+  if (gameState) {
     switch (gameState) {
-      case "Tie":
+      case `Tie`:
         createMessage(`It's a tie!`);
         break;
       default:
@@ -294,23 +292,23 @@ const createMessage = (msg, position) => {
 
 // toggle pit selection.
 const togglePit = (position, reset) => {
-  if (winner != "") return;
-  document.querySelectorAll(".board-pit").forEach((item) => {
-    item.style.border = "";
+  if (winner) return;
+  document.querySelectorAll(`.board-pit`).forEach((item) => {
+    item.removeAttribute(`style`);
     currentPlayerPits();
   });
   if (!reset)
-    document.getElementById(position).style.border = "var(--selected-pit)";
+    document.getElementById(position).style.border = `var(--selected-pit)`;
 };
 
 // switch turns unless they landed on a home pit on their last turn.
 const switchTurn = () => {
-  if (winner != "") return;
-  if (extraTurn === true) {
+  if (winner) return;
+  if (extraTurn) {
     createMessage(`Landed on your home pit. You get an extra turn.`);
     extraTurn = false;
   } else {
-    turn === "player1" ? (turn = "player2") : (turn = "player1");
+    turn = turn === `player1` ? `player2` : `player1`;
     createMessage(`${gamePlay[turn].name}'s turn. Play from a dotted pit.`);
   }
   createPlayerBtn();
@@ -321,7 +319,7 @@ const switchTurn = () => {
 
 // handle player selecting a pit.
 const pitSelect = (position) => {
-  let playTurnBtn = document.querySelector("#play-turn-btn");
+  let playTurnBtn = document.querySelector(`#play-turn-btn`);
   gamePlay[turn].pitSelected.innerHTML = `Pit ${position} Selected`;
   gamePlay[turn].stonesSelected.innerHTML = `${boardStones[position]}`;
   gamePlay[turn].boardPitPositions.indexOf(position) === -1
@@ -336,26 +334,26 @@ const pitSelect = (position) => {
 
 // add pits to the game board.
 const createPits = () => {
-  let pitPosition = 1;
-  // add pits for player 1.
-  for (let i = 0; i < boardConfig.boardPits; i++) {
-    let pit = document.createElement("div");
-    pit.classList.add("board-pit", "player1");
-    pit.id = pitPosition;
-    document.querySelector("#board-pits-2").appendChild(pit);
-    pitPosition++;
-  }
-  // skip the home pit and decrement.
-  pitPosition = 13;
-  // add pits for player 2.
-  for (let i = 0; i < boardConfig.boardPits; i++) {
-    let pit = document.createElement("div");
-    pit.classList.add("board-pit", "player2");
-    pit.id = pitPosition;
-    document.querySelector("#board-pits-1").appendChild(pit);
-    pitPosition--;
-  }
-  delete pitPosition;
+  clearCurrentPits();
+  [`player2`, `player1`].forEach((player) => {
+    let boardPitPos =
+      player === `player2`
+        ? gamePlay[player].boardPitPositions.reverse()
+        : gamePlay[player].boardPitPositions;
+    boardPitPos.forEach((item) => {
+      let pit = document.createElement(`DIV`);
+      pit.classList.add(`board-pit`, player);
+      pit.setAttribute(`tabindex`, item);
+      pit.setAttribute(`id`, item);
+      document.querySelector(`#board-${player}`).appendChild(pit);
+    });
+    let homePit = document.createElement(`DIV`);
+    homePit.classList.add(`home-pits`, player);
+    homePit.setAttribute(`tabindex`, gamePlay[player].homePitPosition);
+    homePit.setAttribute(`id`, gamePlay[player].homePitPosition);
+    homePit.innerText = 0;
+    document.querySelector(`#game-board`).appendChild(homePit);
+  });
 };
 
 // whenever the pit stone objects are updated, also update the DOM.
@@ -375,10 +373,10 @@ const updatePit = (position) => {
       });
     }
     setTimeout(function () {
-      document.getElementById(strPosition).innerHTML = "";
+      document.getElementById(strPosition).innerHTML = ``;
       for (let i = 0; i < boardStones[position]; i++) {
-        let newStone = document.createElement("div");
-        newStone.classList.add("stone");
+        let newStone = document.createElement(`DIV`);
+        newStone.classList.add(`stone`);
         document.getElementById(strPosition).appendChild(newStone);
         setTimeout(function () {
           newStone.style.height = `var(--stone-size)`;
@@ -392,71 +390,74 @@ const updatePit = (position) => {
 
 // creates the play turn button
 const createPlayerBtn = (type) => {
-  document.querySelectorAll(".coin-toss-btn").forEach((item) => {
+  document.querySelectorAll(`.player-btn`).forEach((item) => {
     item.remove();
   });
-  document.querySelectorAll(".play-turn-btn").forEach((item) => {
-    item.remove();
-  });
-  if (type === "toss" && turnCount === -1) {
-    coinTossBtn = document.createElement("button");
-    coinTossBtn.classList.add("coin-toss-btn", "btn", "btn-info");
-    coinTossBtn.id = "coin-toss-btn";
-    coinTossBtn.innerHTML = "Coin Toss";
+  if (type === `toss` && turnCount === -1) {
+    coinTossBtn = document.createElement(`BUTTON`);
+    coinTossBtn.classList.add(
+      `coin-toss-btn`,
+      `btn`,
+      `btn-success`,
+      `player-btn`
+    );
+    coinTossBtn.setAttribute(`id`, `coin-toss-btn`);
+    coinTossBtn.innerHTML = `Coin Toss`;
     gamePlay[turn].playerPane.appendChild(coinTossBtn);
-    coinTossBtn.addEventListener("click", handleClick);
+    coinTossBtn.addEventListener(`click`, handleClick);
   } else {
-    playTurnBtn = document.createElement("button");
-    playTurnBtn.classList.add("play-turn-btn", "btn", "btn-dark");
-    playTurnBtn.id = "play-turn-btn";
-    playTurnBtn.innerHTML = "Play Turn";
-    playTurnBtn.disabled = true;
+    playTurnBtn = document.createElement(`BUTTON`);
+    playTurnBtn.classList.add(`play-turn-btn`, `btn`, `btn-dark`, `player-btn`);
+    playTurnBtn.setAttribute(`id`, `play-turn-btn`);
+    playTurnBtn.setAttribute(`disabled`, true);
+    playTurnBtn.innerHTML = `Play Turn`;
     gamePlay[turn].playerPane.appendChild(playTurnBtn);
-    playTurnBtn.addEventListener("click", handleClick);
+    playTurnBtn.addEventListener(`click`, handleClick);
   }
 };
 
 // highlight the pits that the current player can select
 const currentPlayerPits = () => {
-  let selector = turn === "player1" ? ".player1" : ".player2";
   document.querySelectorAll(`.${turn}`).forEach((item) => {
-    item.style.borderStyle = "dotted";
+    item.style.borderStyle = `dotted`;
   });
 };
 
 // handle click across the entire game scene
 const handleClick = (e) => {
   let numPosition = Number(e.target.id);
-  if (e.target.classList.contains("board-pit")) {
-    if (winner != "") return;
+  if (e.target.classList.contains(`board-pit`)) {
+    if (winner) return;
     togglePit(numPosition);
     pitSelect(numPosition);
-  } else if (e.target.id === "play-turn-btn") {
-    if (winner != "") return;
+  } else if (e.target.id === `play-turn-btn`) {
+    if (winner) return;
     playTurn(e.target.dataset.pit);
-  } else if (e.target.id === "play-again") {
-    togglePlayAgain(true);
+  } else if (e.target.id === `play-again`) {
+    togglePlayAgain(remove);
     init();
-  } else if (e.target.id === "new-game-button") {
-    gamePlay.player1.name = document.getElementById("player1NameInput").value;
-    gamePlay.player2.name = document.getElementById("player2NameInput").value;
-    difficulty = document.getElementById("difficulty").value;
+  } else if (e.target.id === `new-game-button`) {
+    gamePlay.player1.name = document.getElementById(`player1NameInput`).value;
+    gamePlay.player2.name = document.getElementById(`player2NameInput`).value;
+    difficulty = document.getElementById(`difficulty`).value;
     initialPitStones();
     setPlayerParams();
-    toggleStartDialog();
+    toggleStartDialog(`remove`);
     createMessage(`Do a coin toss to choose the first player.`);
-  } else if (e.target.id === "coin-toss-btn") {
+  } else if (e.target.id === `coin-toss-btn`) {
     let coinSide = coinToss();
     gamePlay[turn].pitSelected.innerHTML = `Rolled ${coinSide}`;
     gamePlay[turn].coinSideTossed = coinSide;
-    if (
-      gamePlay.player1.coinSideTossed !== "" &&
-      gamePlay.player2.coinSideTossed !== ""
-    ) {
-      if (gamePlay.player1.coinSideTossed === gamePlay.player2.coinSideTossed) {
+    if (gamePlay.player1.coinSideTossed && gamePlay.player2.coinSideTossed) {
+      if (
+        Object.is(
+          gamePlay.player1.coinSideTossed,
+          gamePlay.player2.coinSideTossed
+        )
+      ) {
         createMessage(`Rolled the same side. Try again.`);
-        gamePlay.player1.coinSideTossed = "";
-        gamePlay.player2.coinSideTossed = "";
+        delete gamePlay.player1.coinSideTossed;
+        delete gamePlay.player2.coinSideTossed;
         turn = `player1`;
         createPlayerBtn(`toss`);
       } else {
@@ -469,8 +470,8 @@ const handleClick = (e) => {
         turnCount = 0;
       }
     } else if (
-      gamePlay.player1.coinSideTossed === "" ||
-      gamePlay.player2.coinSideTossed === ""
+      !gamePlay.player1.coinSideTossed ||
+      !gamePlay.player2.coinSideTossed
     ) {
       turn = turn === `player1` ? `player2` : `player1`;
       createPlayerBtn(`toss`);
@@ -479,32 +480,30 @@ const handleClick = (e) => {
   }
 };
 
-const clearGameBoard = () => {
-  document.querySelectorAll(".board-pit").forEach((item) => {
-    item.remove();
-  });
+// clear the current pits if any exists
+const clearCurrentPits = () => {
+  if (document.querySelector(`.board-pit`)) {
+    document.querySelectorAll(`.board-pit`).forEach((item) => {
+      item.remove();
+    });
+  }
 };
 
 const renderPlayerPane = () => {
-  createPlayerBtn("toss");
+  createPlayerBtn(`toss`);
 };
 
-const renderBoard = () => {
-  clearGameBoard();
-  createPits();
+const createPitStones = (scene) => {
+  [`player1`, `player2`].forEach((item) => {
+    scene[item].boardPitPositions.forEach((position) => {
+      boardStones[position] = 0;
+    });
+    homePitStones[scene[item].homePitPosition] = 0;
+  });
+};
+
+const renderBoard = (scene) => {
   boardStones = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-    12: 0,
-    13: 0,
     add: function (position) {
       this[position] = this[position] + 1;
       updatePit(position);
@@ -518,66 +517,67 @@ const renderBoard = () => {
     },
   };
   homePitStones = {
-    7: 0,
-    14: 0,
     add: function (position) {
       this[position] = this[position] + 1;
       updatePit(position);
       return this[position];
     },
   };
+  createPits();
+  createPitStones(scene);
   turnCount = -1;
-  selectedPit = "";
-  winner = "";
+  selectedPit = ``;
+  winner = ``;
   setPlayerParams();
   toggleStartDialog();
 };
 
-const toggleStartDialog = () => {
-  if (document.getElementById("start-dialog")) {
-    document.getElementById("start-dialog").remove();
-    document.querySelector("#player-1-pane").removeAttribute("style");
-    document.querySelector("#player-2-pane").removeAttribute("style");
+// adds a start dialog to the DOM to set player names and difficulty level
+const toggleStartDialog = (remove) => {
+  if (document.getElementById(`start-dialog`) && remove === `remove`) {
+    document.getElementById(`start-dialog`).remove();
+    document.querySelector(`#player-1-pane`).removeAttribute(`style`);
+    document.querySelector(`#player-2-pane`).removeAttribute(`style`);
   } else {
     let dialogElements = {};
-    dialogElements.container = document.createElement("div");
-    dialogElements.container.classList.add("start-dialog");
-    dialogElements.container.id = "start-dialog";
+    dialogElements.container = document.createElement(`DIV`);
+    dialogElements.container.classList.add(`start-dialog`);
+    dialogElements.container.setAttribute(`id`, `start-dialog`);
     // name inputs
-    dialogElements.player1Name = document.createElement("input");
-    dialogElements.player1Name.value = "Player 1";
-    dialogElements.player1Name.id = "player1NameInput";
-    dialogElements.player1Name.addEventListener("click", handleInput);
-    dialogElements.player1Name.addEventListener("focusout", handleInput);
-    dialogElements.player2Name = document.createElement("input");
-    dialogElements.player2Name.value = "Player 2";
-    dialogElements.player2Name.id = "player2NameInput";
-    dialogElements.player2Name.addEventListener("click", handleInput);
-    dialogElements.player2Name.addEventListener("focusout", handleInput);
+    dialogElements.player1Name = document.createElement(`INPUT`);
+    dialogElements.player1Name.setAttribute(`value`, `Player 1`);
+    dialogElements.player1Name.setAttribute(`id`, `player1NameInput`);
+    dialogElements.player1Name.addEventListener(`click`, handleInput);
+    dialogElements.player1Name.addEventListener(`focusout`, handleInput);
+    dialogElements.player2Name = document.createElement(`INPUT`);
+    dialogElements.player2Name.setAttribute(`value`, `Player 2`);
+    dialogElements.player2Name.setAttribute(`id`, `player2NameInput`);
+    dialogElements.player2Name.addEventListener(`click`, handleInput);
+    dialogElements.player2Name.addEventListener(`focusout`, handleInput);
     //difficulty select
-    dialogElements.difficultyLabel = document.createElement("label");
-    dialogElements.difficultyLabel.for = "difficulty";
-    dialogElements.difficultyLabel.id = "difficulty-label";
-    dialogElements.difficultyLabel.innerText = "Difficulty";
-    dialogElements.difficulty = document.createElement("select");
-    dialogElements.difficulty.id = "difficulty";
-    dialogElements.difficulty.name = "difficulty";
+    dialogElements.difficultyLabel = document.createElement(`LABEL`);
+    dialogElements.difficultyLabel.for = `difficulty`;
+    dialogElements.difficultyLabel.id = `difficulty-label`;
+    dialogElements.difficultyLabel.innerText = `Difficulty`;
+    dialogElements.difficulty = document.createElement(`SELECT`);
+    dialogElements.difficulty.id = `difficulty`;
+    dialogElements.difficulty.name = `difficulty`;
     dialogElements.difficultyOptions = [3, 4, 5, 6, 7, 8, 9, 10];
     dialogElements.difficultyOptions.forEach((item) => {
-      let option = document.createElement("option");
-      option.value = item;
-      if (item === difficulty) option.setAttribute("selected", true);
+      let option = document.createElement(`OPTION`);
+      option.setAttribute(`value`, item);
+      if (Object.is(item, difficulty)) option.setAttribute(`selected`, true);
       option.innerHTML = item;
       dialogElements.difficulty.add(option);
     });
     // start a new game button
-    dialogElements.startButton = document.createElement("button");
-    dialogElements.startButton.id = "new-game-button";
-    dialogElements.startButton.innerText = "Start A New Game";
+    dialogElements.startButton = document.createElement(`BUTTON`);
+    dialogElements.startButton.id = `new-game-button`;
+    dialogElements.startButton.innerText = `Start A New Game`;
     dialogElements.startButton.classList.add(
-      "new-game-button",
-      "btn",
-      "btn-primary"
+      `new-game-button`,
+      `btn`,
+      `btn-primary`
     );
     // append elements to container
     dialogElements.container.appendChild(dialogElements.player1Name);
@@ -585,11 +585,11 @@ const toggleStartDialog = () => {
     dialogElements.container.appendChild(dialogElements.difficultyLabel);
     dialogElements.container.appendChild(dialogElements.difficulty);
     dialogElements.container.appendChild(dialogElements.startButton);
-    document.querySelector("#player-1-pane").style.display = "none";
-    document.querySelector("#player-2-pane").style.display = "none";
+    document.querySelector(`#player-1-pane`).style.display = `none`;
+    document.querySelector(`#player-2-pane`).style.display = `none`;
     playerPane.appendChild(dialogElements.container);
-    newGameBtn = document.querySelector("#new-game-button");
-    newGameBtn.addEventListener("click", handleClick);
+    newGameBtn = document.querySelector(`#new-game-button`);
+    newGameBtn.addEventListener(`click`, handleClick);
     delete dialogElements;
   }
 };
@@ -597,27 +597,27 @@ const toggleStartDialog = () => {
 const handleInput = (e) => {
   // UX function: handle input functionality for start dialog
   if (
-    e.target.tagName === "INPUT" &&
-    e.target.parentNode.id === "start-dialog"
+    e.target.tagName === `INPUT` &&
+    e.target.parentNode.id === `start-dialog`
   ) {
-    e.type === "click" &&
-    (e.target.value === "Player 1" || e.target.value === "Player 2")
-      ? (e.target.value = "")
+    e.type === `click` &&
+    (e.target.value === `Player 1` || e.target.value === `Player 2`)
+      ? (e.target.value = ``)
       : e.target.value;
-    e.type === "focusout" && (e.target.value === "" || e.target.value === "")
+    e.type === `focusout` && (e.target.value === `` || e.target.value === ``)
       ? (e.target.value =
-          e.target.id === "player1NameInput" ? "Player 1" : "Player 2")
+          e.target.id === `player1NameInput` ? `Player 1` : `Player 2`)
       : e.target.value;
   }
 };
 
 const init = () => {
   gamePlay = new GameScene();
-  renderBoard();
+  renderBoard(gamePlay);
   renderPlayerPane();
 };
 
 init();
 
 /****** event listeners ******/
-gameBoard.addEventListener("click", handleClick);
+gameBoard.addEventListener(`click`, handleClick);
