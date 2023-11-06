@@ -13,7 +13,7 @@ A coin is rolled at the beginning of the game to determine who starts it. The ga
 Included with the repository in the wireframes directory.
 
 ### Getting Started
-Deployed on [Github Pages](https://gokepelemo.github.io/mancala). Simply enter the names of your players and start.
+Deployed on [Cloudflare](https://mancala.goke.tech/). Simply enter the names of your players and start.
 
 ### Screenshots
 #### Animated
